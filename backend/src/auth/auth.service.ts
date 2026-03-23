@@ -13,12 +13,15 @@ import { Request, Response } from 'express'
 import { LoginDto } from './dto/login.dto'
 import { verify } from 'argon2'
 import { ConfigService } from '@nestjs/config'
+import { prisma } from '@/libs/prisma'
+import { ProviderService } from './provider/provider.service'
 
 @Injectable()
 export class AuthService {
 	public constructor(
 		private readonly userService: UserService,
-		private readonly configService: ConfigService
+		private readonly configService: ConfigService,
+		private readonly providerService: ProviderService
 	) {}
 
 	public async register(req: Request, dto: RegisterDto) {
@@ -62,6 +65,61 @@ export class AuthService {
 		return this.saveSession(req, user)
 	}
 
+	public async extractProfileFromCode(
+		req: Request,
+		provider: string,
+		code: string
+	) {
+		const providerInstance = this.providerService.findByService(provider)
+
+		if (!providerInstance) {
+			throw new NotFoundException(`Провайдер '${provider}' не найден.`)
+		}
+
+		const profile = await providerInstance.findUserByCode(code)
+
+		const account = await prisma.account.findFirst({
+			where: {
+				id: profile.id,
+				provider: profile.provider
+			}
+		})
+
+		let user = account?.userId
+			? await this.userService.findById(account.userId)
+			: null
+
+		if (user) {
+			return this.saveSession(req, user)
+		}
+
+		user = await this.userService.create(
+			profile.email,
+			'',
+			profile.name,
+			profile.picture,
+			AuthMethod[
+				profile.provider.toUpperCase() as keyof typeof AuthMethod
+			],
+			true
+		)
+
+		if (!account) {
+			await prisma.account.create({
+				data: {
+					userId: user.id,
+					type: 'oauth',
+					provider: profile.provider,
+					accessToken: profile.access_token,
+					refreshToken: profile.refresh_token,
+					expiresAt: this.calculateExpiresAt(profile.expires_at)
+				}
+			})
+		}
+
+		return this.saveSession(req, user)
+	}
+
 	public async logout(req: Request, res: Response): Promise<void> {
 		return new Promise((resolve, reject) => {
 			req.session.destroy(err => {
@@ -81,7 +139,7 @@ export class AuthService {
 		})
 	}
 
-	private async saveSession(req: Request, user: User) {
+	public async saveSession(req: Request, user: User) {
 		return new Promise((resolve, reject) => {
 			req.session.userId = user.id
 
@@ -97,5 +155,18 @@ export class AuthService {
 				resolve({ user })
 			})
 		})
+	}
+
+	private calculateExpiresAt(expiresAt?: number): number {
+		if (expiresAt) {
+			return expiresAt
+		}
+
+		if (typeof expiresAt === 'number' && expiresAt < 1000000000000) {
+			return Date.now() + expiresAt * 1000
+		}
+
+		// Значение по умолчанию: 1 час с текущего момента
+		return Date.now() + 60 * 60 * 1000
 	}
 }

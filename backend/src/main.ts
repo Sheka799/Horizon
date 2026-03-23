@@ -7,7 +7,7 @@ import IORedis from 'ioredis'
 import * as session from 'express-session'
 import { parseBoolean } from './libs/common/utils/parse-boolean.util'
 import * as ms from 'ms'
-import { RedisStore } from 'connect-redis'
+import RedisStore from 'connect-redis'
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule)
