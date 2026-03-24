@@ -9,6 +9,7 @@ import { getProvidersConfig } from '@/config/providers.config'
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module'
 import { UserModule } from '@/user/user.module'
 import { PasswordRecoveryModule } from './password-recovery/password-recovery.module'
+import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module'
 @Module({
 	imports: [
 		ProviderModule.registerAsync({
@@ -18,6 +19,7 @@ import { PasswordRecoveryModule } from './password-recovery/password-recovery.mo
 		}),
 		UserModule,
 		PasswordRecoveryModule,
+		TwoFactorAuthModule,
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		forwardRef(() => EmailConfirmationModule),
 		GoogleRecaptchaModule.forRootAsync({
