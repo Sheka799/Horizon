@@ -15,13 +15,14 @@ import { verify } from 'argon2'
 import { ConfigService } from '@nestjs/config'
 import { prisma } from '@/libs/prisma'
 import { ProviderService } from './provider/provider.service'
-
+import { EmailConfirmationService } from './email-confirmation/email-confirmation.service'
 @Injectable()
 export class AuthService {
 	public constructor(
 		private readonly userService: UserService,
 		private readonly configService: ConfigService,
-		private readonly providerService: ProviderService
+		private readonly providerService: ProviderService,
+		private readonly emailConfirmationService: EmailConfirmationService
 	) {}
 
 	public async register(req: Request, dto: RegisterDto) {
@@ -42,7 +43,12 @@ export class AuthService {
 			false
 		)
 
-		return this.saveSession(req, newUser)
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		await this.emailConfirmationService.sendVerificationToken(newUser.email)
+
+		return {
+			message: 'Вы успешно зарегестрировались. Пожалуйста, подтвердите ваш email. Сообщение было отправлено на ваш почтовый адрес.'
+		}
 	}
 
 	public async login(req: Request, dto: LoginDto) {
@@ -60,6 +66,12 @@ export class AuthService {
 			throw new UnauthorizedException(
 				'Пользователь не найден. Пожалуйста проверьте введенные данные.'
 			)
+		}
+
+		if (!user.isVerified) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			await this.emailConfirmationService.sendVerificationToken(user.email)
+			throw new UnauthorizedException('Ваш email не подтвержден. Пожалуйста, проверьте вашу почту и подтвердите адрес.')
 		}
 
 		return this.saveSession(req, user)
