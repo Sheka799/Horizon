@@ -8,6 +8,7 @@ import { ProviderModule } from './provider/provider.module'
 import { getProvidersConfig } from '@/config/providers.config'
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module'
 import { UserModule } from '@/user/user.module'
+import { PasswordRecoveryModule } from './password-recovery/password-recovery.module'
 @Module({
 	imports: [
 		ProviderModule.registerAsync({
@@ -16,6 +17,7 @@ import { UserModule } from '@/user/user.module'
 			inject: [ConfigService]
 		}),
 		UserModule,
+		PasswordRecoveryModule,
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		forwardRef(() => EmailConfirmationModule),
 		GoogleRecaptchaModule.forRootAsync({
