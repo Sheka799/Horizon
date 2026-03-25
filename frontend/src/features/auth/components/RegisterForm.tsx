@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -17,10 +18,10 @@ import {
 	Input
 } from '@/shared/components/ui'
 
+import { useRegisterMutation } from '../hooks'
 import { RegisterSchema, TypeRegisterSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
-import ReCAPTCHA from 'react-google-recaptcha'
 
 export function RegisterForm() {
 	const { theme } = useTheme()
@@ -36,9 +37,11 @@ export function RegisterForm() {
 		}
 	})
 
+	const { register, IsLoadingRegister } = useRegisterMutation()
+
 	const onSubmit = (values: TypeRegisterSchema) => {
 		if (recaptchaValue) {
-			console.log(values)
+			register({ values, recaptcha: recaptchaValue })
 		} else {
 			toast.error('Пожалуйста, подтвердите, что вы не робот')
 		}
@@ -133,7 +136,11 @@ export function RegisterForm() {
 							theme={theme === 'light' ? 'light' : 'dark'}
 						/>
 					</div>
-					<Button type='submit' className='mt-4 w-full'>
+					<Button
+						type='submit'
+						disabled={IsLoadingRegister}
+						className='mt-4 w-full'
+					>
 						Зарегистрироваться
 					</Button>
 				</form>

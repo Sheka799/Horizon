@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -17,10 +18,10 @@ import {
 	Input
 } from '@/shared/components/ui'
 
+import { useLoginMutation } from '../hooks'
 import { LoginSchema, TypeLoginSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
-import ReCAPTCHA from 'react-google-recaptcha'
 
 export function LoginForm() {
 	const { theme } = useTheme()
@@ -34,9 +35,11 @@ export function LoginForm() {
 		}
 	})
 
+	const { login, IsLoadingLogin } = useLoginMutation()
+
 	const onSubmit = (values: TypeLoginSchema) => {
 		if (recaptchaValue) {
-			console.log(values)
+			login({ values, recaptcha: recaptchaValue })
 		} else {
 			toast.error('Пожалуйста, подтвердите, что вы не робот')
 		}
@@ -98,7 +101,11 @@ export function LoginForm() {
 							theme={theme === 'light' ? 'light' : 'dark'}
 						/>
 					</div>
-					<Button type='submit' className='mt-4 w-full'>
+					<Button
+						type='submit'
+						disabled={IsLoadingLogin}
+						className='mt-4 w-full'
+					>
 						Войти
 					</Button>
 				</form>
