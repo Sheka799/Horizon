@@ -22,6 +22,13 @@ class AuthService {
 		return response.data
 	}
 
+	public async oauthByProvider(provider: 'google' | 'yandex') {
+		const response = await axiosClassic.get<{ url: string }>(
+			`/auth/oauth/connect/${provider}`
+		)
+		return response.data
+	}
+
 	public async logout() {
 		const response = await axiosClassic.post('/auth/logout')
 		return response
