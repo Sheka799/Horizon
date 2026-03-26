@@ -18,29 +18,27 @@ import {
 	Input
 } from '@/shared/components/ui'
 
-import { useLoginMutation } from '../hooks'
-import { LoginSchema, TypeLoginSchema } from '../schemes'
+import { useResetPasswordMutation } from '../hooks'
+import { ResetPasswordSchema, TypeResetPasswordSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
-import Link from 'next/link'
 
-export function LoginForm() {
+export function ResetPasswordForm() {
 	const { theme } = useTheme()
 	const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null)
 
-	const form = useForm<TypeLoginSchema>({
-		resolver: zodResolver(LoginSchema),
+	const form = useForm<TypeResetPasswordSchema>({
+		resolver: zodResolver(ResetPasswordSchema),
 		defaultValues: {
-			email: '',
-			password: ''
+			email: ''
 		}
 	})
 
-	const { login, IsLoadingLogin } = useLoginMutation()
+	const { reset, isLoadingReset } = useResetPasswordMutation()
 
-	const onSubmit = (values: TypeLoginSchema) => {
+	const onSubmit = (values: TypeResetPasswordSchema) => {
 		if (recaptchaValue) {
-			login({ values, recaptcha: recaptchaValue })
+			reset({ values, recaptcha: recaptchaValue })
 		} else {
 			toast.error('Пожалуйста, подтвердите, что вы не робот')
 		}
@@ -48,11 +46,10 @@ export function LoginForm() {
 
 	return (
 		<AuthWrapper
-			heading='Вход'
-			description='Чтобы войти на сайт введите ваш email и пароль'
-			backButtonLabel='Нет аккаунта? Зарегистрироваться'
-			backButtonHref='/auth/register'
-			isShowSocials
+			heading='Сброс пароля'
+			description='Введите ваш email, чтобы получить ссылку на сброс пароля'
+			backButtonLabel='Войти в аккаунт'
+			backButtonHref='/auth/login'
 		>
 			<Form {...form}>
 				<form
@@ -67,33 +64,9 @@ export function LoginForm() {
 								<FormLabel>Email</FormLabel>
 								<FormControl>
 									<Input
+										disabled={isLoadingReset}
 										placeholder='Введите ваш email'
 										type='email'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='password'
-						render={({ field }) => (
-							<FormItem>
-								<div className='flex items-center justify-between'>
-									<FormLabel>Пароль</FormLabel>
-									<Link
-										href='/auth/reset-password'
-										className='ml-auto inline-block text-sm underline'
-									>
-										Забыли пароль?
-									</Link>
-								</div>
-								<FormControl>
-									<Input
-										placeholder='********'
-										type='password'
 										{...field}
 									/>
 								</FormControl>
@@ -112,10 +85,10 @@ export function LoginForm() {
 					</div>
 					<Button
 						type='submit'
-						disabled={IsLoadingLogin}
+						disabled={isLoadingReset}
 						className='mt-4 w-full'
 					>
-						Войти
+						Сбросить пароль
 					</Button>
 				</form>
 			</Form>

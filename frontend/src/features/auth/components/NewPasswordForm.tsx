@@ -18,29 +18,27 @@ import {
 	Input
 } from '@/shared/components/ui'
 
-import { useLoginMutation } from '../hooks'
-import { LoginSchema, TypeLoginSchema } from '../schemes'
+import { useNewPasswordMutation } from '../hooks'
+import { NewPasswordSchema, TypeNewPasswordSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
-import Link from 'next/link'
 
-export function LoginForm() {
+export function NewPasswordForm() {
 	const { theme } = useTheme()
 	const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null)
 
-	const form = useForm<TypeLoginSchema>({
-		resolver: zodResolver(LoginSchema),
+	const form = useForm<TypeNewPasswordSchema>({
+		resolver: zodResolver(NewPasswordSchema),
 		defaultValues: {
-			email: '',
 			password: ''
 		}
 	})
 
-	const { login, IsLoadingLogin } = useLoginMutation()
+	const { newPassword, isLoadingNewPassword } = useNewPasswordMutation()
 
-	const onSubmit = (values: TypeLoginSchema) => {
+	const onSubmit = (values: TypeNewPasswordSchema) => {
 		if (recaptchaValue) {
-			login({ values, recaptcha: recaptchaValue })
+			newPassword({ values, recaptcha: recaptchaValue })
 		} else {
 			toast.error('Пожалуйста, подтвердите, что вы не робот')
 		}
@@ -48,11 +46,10 @@ export function LoginForm() {
 
 	return (
 		<AuthWrapper
-			heading='Вход'
-			description='Чтобы войти на сайт введите ваш email и пароль'
-			backButtonLabel='Нет аккаунта? Зарегистрироваться'
-			backButtonHref='/auth/register'
-			isShowSocials
+			heading='Новый пароль'
+			description='Пожалуйста, введите ваш новый пароль'
+			backButtonLabel='Войти в аккаунт'
+			backButtonHref='/auth/login'
 		>
 			<Form {...form}>
 				<form
@@ -61,37 +58,13 @@ export function LoginForm() {
 				>
 					<FormField
 						control={form.control}
-						name='email'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Email</FormLabel>
-								<FormControl>
-									<Input
-										placeholder='Введите ваш email'
-										type='email'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
 						name='password'
 						render={({ field }) => (
 							<FormItem>
-								<div className='flex items-center justify-between'>
-									<FormLabel>Пароль</FormLabel>
-									<Link
-										href='/auth/reset-password'
-										className='ml-auto inline-block text-sm underline'
-									>
-										Забыли пароль?
-									</Link>
-								</div>
+								<FormLabel>Пароль</FormLabel>
 								<FormControl>
 									<Input
+										disabled={isLoadingNewPassword}
 										placeholder='********'
 										type='password'
 										{...field}
@@ -112,10 +85,10 @@ export function LoginForm() {
 					</div>
 					<Button
 						type='submit'
-						disabled={IsLoadingLogin}
+						disabled={isLoadingNewPassword}
 						className='mt-4 w-full'
 					>
-						Войти
+						Сбросить пароль
 					</Button>
 				</form>
 			</Form>
