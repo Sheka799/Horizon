@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
+import Link from 'next/link'
 import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { useForm } from 'react-hook-form'
@@ -22,11 +23,11 @@ import { useLoginMutation } from '../hooks'
 import { LoginSchema, TypeLoginSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
-import Link from 'next/link'
 
 export function LoginForm() {
 	const { theme } = useTheme()
 	const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null)
+	const [isShowTwoFactor, setIsShowTwoFactor] = useState(false)
 
 	const form = useForm<TypeLoginSchema>({
 		resolver: zodResolver(LoginSchema),
@@ -36,7 +37,7 @@ export function LoginForm() {
 		}
 	})
 
-	const { login, IsLoadingLogin } = useLoginMutation()
+	const { login, IsLoadingLogin } = useLoginMutation(setIsShowTwoFactor)
 
 	const onSubmit = (values: TypeLoginSchema) => {
 		if (recaptchaValue) {
@@ -59,48 +60,76 @@ export function LoginForm() {
 					onSubmit={form.handleSubmit(onSubmit)}
 					className='grid gap-2 space-y-2'
 				>
-					<FormField
-						control={form.control}
-						name='email'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Email</FormLabel>
-								<FormControl>
-									<Input
-										placeholder='Введите ваш email'
-										type='email'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='password'
-						render={({ field }) => (
-							<FormItem>
-								<div className='flex items-center justify-between'>
-									<FormLabel>Пароль</FormLabel>
-									<Link
-										href='/auth/reset-password'
-										className='ml-auto inline-block text-sm underline'
-									>
-										Забыли пароль?
-									</Link>
-								</div>
-								<FormControl>
-									<Input
-										placeholder='********'
-										type='password'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+					{isShowTwoFactor && (
+						<FormField
+							control={form.control}
+							name='code'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										Код двухфакторной аутентификации
+									</FormLabel>
+									<FormControl>
+										<Input
+											disabled={IsLoadingLogin}
+											placeholder='Введите код'
+											type='text'
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					)}
+
+					{!isShowTwoFactor && (
+						<>
+							<FormField
+								control={form.control}
+								name='email'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Email</FormLabel>
+										<FormControl>
+											<Input
+												placeholder='Введите ваш email'
+												type='email'
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name='password'
+								render={({ field }) => (
+									<FormItem>
+										<div className='flex items-center justify-between'>
+											<FormLabel>Пароль</FormLabel>
+											<Link
+												href='/auth/reset-password'
+												className='ml-auto inline-block text-sm underline'
+											>
+												Забыли пароль?
+											</Link>
+										</div>
+										<FormControl>
+											<Input
+												placeholder='********'
+												type='password'
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</>
+					)}
+
 					<div className='flex justify-center'>
 						<ReCAPTCHA
 							sitekey={
