@@ -12,7 +12,7 @@ const axiosClassic = axios.create(options)
 const axiosWithAuth = axios.create(options)
 
 axiosWithAuth.interceptors.response.use(
-	response => response,
+	response => response.data,
 	async error => {
 		if (error.response?.status === 401) {
 			if (typeof window !== 'undefined') {
