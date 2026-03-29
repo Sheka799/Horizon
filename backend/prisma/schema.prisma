@@ -24,6 +24,7 @@ model User {
   method AuthMethod
 
   accounts Account[]
+  boards   Board[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -44,8 +45,8 @@ model Account {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   @@map("accounts")
 }
@@ -63,6 +64,55 @@ model Token {
   @@map("tokens")
 }
 
+model Board {
+  id String @id @default(uuid())
+
+  title   String
+  columns Column[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@map("boards")
+}
+
+model Column {
+  id String @id @default(uuid())
+
+  title String
+  order String @default("a0")
+  tasks Task[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId String @map("board_id")
+
+  @@map("columns")
+}
+
+model Task {
+  id String @id @default(uuid())
+
+  name        String
+  priority    Priority?
+  isCompleted Boolean   @default(false) @map("is_completed")
+  dueDate     DateTime? @map("due_date")
+  order       String    @default("a0")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  column   Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  columnId String @map("column_id")
+
+  @@map("tasks")
+}
+
 enum UserRole {
   REGULAR
   ADMIN
@@ -78,4 +128,10 @@ enum TokenType {
   VERIFICATION
   TWO_FACTOR
   PASSWORD_RESET
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
 }

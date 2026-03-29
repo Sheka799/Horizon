@@ -32,3 +32,18 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Token = Prisma.TokenModel
+/**
+ * Model Board
+ * 
+ */
+export type Board = Prisma.BoardModel
+/**
+ * Model Column
+ * 
+ */
+export type Column = Prisma.ColumnModel
+/**
+ * Model Task
+ * 
+ */
+export type Task = Prisma.TaskModel
