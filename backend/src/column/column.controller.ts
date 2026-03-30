@@ -19,7 +19,7 @@ export class ColumnController {
 	constructor(private readonly columnService: ColumnService) {}
 
 	@Authorization()
-	@HttpCode(HttpStatus.OK)
+	@HttpCode(HttpStatus.NO_CONTENT)
 	@Delete(':id')
 	async delete(@Authorized('id') userId: string, @Param('id') id: string) {
 		return this.columnService.delete(userId, id)
