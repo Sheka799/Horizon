@@ -50,7 +50,7 @@ export class EmailConfirmationService {
             }
         })
 
-        await prisma.token.delete({
+        await prisma.token.deleteMany({
             where: {
                 id: existingToken.id,
                 type: TokenType.VERIFICATION

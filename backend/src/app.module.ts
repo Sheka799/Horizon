@@ -4,6 +4,7 @@ import { IS_DEV_ENV } from './libs/common/utils/is-dev.util'
 import { MailModule } from './libs/mail/mail.module';
 import { AuthModule } from './auth/auth.module'
 import { BoardModule } from './board/board.module';
+import { ColumnModule } from './column/column.module';
 
 @Module({
 	imports: [
@@ -13,7 +14,8 @@ import { BoardModule } from './board/board.module';
 		}),
 		AuthModule,
 		MailModule,
-		BoardModule
+		BoardModule,
+		ColumnModule
 	]
 })
 export class AppModule {}
