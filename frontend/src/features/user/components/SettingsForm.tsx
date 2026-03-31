@@ -47,9 +47,6 @@ export function SettingsForm() {
 
 	return (
 		<Card className='w-[400px]'>
-			<CardHeader className='flex flex-row items-center justify-between'>
-				<CardTitle>Настройки профиля</CardTitle>
-			</CardHeader>
 			<CardContent>
 				{isLoading ? (
 					<Loader />
