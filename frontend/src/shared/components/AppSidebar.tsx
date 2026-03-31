@@ -18,27 +18,28 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem
-} from '@/shared/components/ui/Sidebar'
+} from '@/shared/components/ui'
 
 import { useProfile } from '../hooks'
 
 import { Loader } from './ui'
+import { ROUTES } from '../config'
 
 const data = {
 	navMain: [
 		{
 			title: 'Дашборд',
-			url: '/dashboard',
+			url: ROUTES.DASHBOARD.ROOT,
 			icon: <LayoutDashboardIcon />
 		},
 		{
 			title: 'Доски задач',
-			url: '/dashboard/boards',
+			url: ROUTES.DASHBOARD.BOARDS,
 			icon: <Grid2x2 />
 		},
 		{
 			title: 'Настройки',
-			url: '/dashboard/settings',
+			url: ROUTES.DASHBOARD.SETTINGS,
 			icon: <SettingsIcon />
 		}
 	]

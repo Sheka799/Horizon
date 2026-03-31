@@ -6,6 +6,7 @@ import { toastMessageHandler } from '@/shared/utils'
 
 import { TypeLoginSchema } from '../schemes'
 import { authService } from '../services'
+import { ROUTES } from '@/shared/config'
 
 export function useLoginMutation(setIsShowTwoFactor: React.Dispatch<React.SetStateAction<boolean>>) {
 	const router = useRouter()
@@ -27,7 +28,7 @@ export function useLoginMutation(setIsShowTwoFactor: React.Dispatch<React.SetSta
 				toast.success('Успешный вход!', {
 					description: 'Вы успешно вошли в систему'
 				})
-				router.push('/dashboard')
+				router.push(ROUTES.DASHBOARD.ROOT)
 			}
 		},
 		onError: error => {

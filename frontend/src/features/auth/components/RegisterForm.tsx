@@ -22,6 +22,7 @@ import { useRegisterMutation } from '../hooks'
 import { RegisterSchema, TypeRegisterSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
+import { ROUTES } from '@/shared/config'
 
 export function RegisterForm() {
 	const { theme } = useTheme()
@@ -52,7 +53,7 @@ export function RegisterForm() {
 			heading='Регистрация'
 			description='Создайте новый аккаунт и&nbsp;начните пользоваться всеми преимуществами нашего сервиса'
 			backButtonLabel='Уже есть аккаунт? Войти'
-			backButtonHref='/auth/login'
+			backButtonHref={ROUTES.AUTH.LOGIN}
 			isShowSocials
 		>
 			<Form {...form}>

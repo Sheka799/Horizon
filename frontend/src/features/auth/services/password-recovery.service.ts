@@ -2,12 +2,13 @@ import { axiosClassic } from '@/shared/api'
 
 import { TypeNewPasswordSchema, TypeResetPasswordSchema } from '../schemes'
 import { IUser } from '../types'
+import { ROUTES } from '@/shared/config'
 
 class PasswordRecoveryService {
 	public async reset(body: TypeResetPasswordSchema, recaptcha?: string) {
 		const headers = recaptcha ? { recaptcha } : undefined
 		const response = await axiosClassic.post<IUser>(
-			'/auth/password-recovery/reset',
+			`${ROUTES.AUTH.PASSWORD_RECOVERY}/reset`,
 			body,
 			{
 				headers
@@ -23,7 +24,7 @@ class PasswordRecoveryService {
 	) {
 		const headers = recaptcha ? { recaptcha } : undefined
 		const response = await axiosClassic.post<IUser>(
-			`/auth/password-recovery/new/${token}`,
+			`${ROUTES.AUTH.PASSWORD_RECOVERY}/new/${token}`,
 			body,
 			{
 				headers

@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 import { verificationService } from '../services'
+import { ROUTES } from '@/shared/config'
 
 export function useVerificationMutation() {
 	const router = useRouter()
@@ -13,10 +14,10 @@ export function useVerificationMutation() {
 			verificationService.newVerification(token),
 		onSuccess() {
 			toast.success('Почта успешно подтверждена')
-			router.push('/dashboard')
+			router.push(ROUTES.DASHBOARD.ROOT)
 		},
 		onError() {
-			router.push('/auth/login')
+			router.push(ROUTES.AUTH.LOGIN)
 		}
 	})
 

@@ -1,4 +1,5 @@
 import axios, { type CreateAxiosDefaults } from 'axios'
+import { ROUTES } from '../config'
 
 const options: CreateAxiosDefaults = {
 	baseURL: process.env.SERVER_URL,
@@ -16,7 +17,7 @@ axiosWithAuth.interceptors.response.use(
 	async error => {
 		if (error.response?.status === 401) {
 			if (typeof window !== 'undefined') {
-				window.location.href = '/auth/login'
+				window.location.href = ROUTES.AUTH.LOGIN
 			}
 		}
 

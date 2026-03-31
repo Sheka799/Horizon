@@ -28,9 +28,10 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar
-} from '@/shared/components/ui/Sidebar'
+} from '@/shared/components/ui'
 
 import { useProfile } from '../hooks'
+import { ROUTES } from '../config'
 
 export function NavUser() {
 	const { isMobile } = useSidebar()
@@ -99,7 +100,7 @@ export function NavUser() {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuLinkItem href='/dashboard/profile'>
+							<DropdownMenuLinkItem href={ROUTES.DASHBOARD.PROFILE}>
 								<CircleUserRoundIcon />
 								Настройки профиля
 							</DropdownMenuLinkItem>

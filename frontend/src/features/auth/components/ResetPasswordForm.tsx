@@ -22,6 +22,7 @@ import { useResetPasswordMutation } from '../hooks'
 import { ResetPasswordSchema, TypeResetPasswordSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
+import { ROUTES } from '@/shared/config'
 
 export function ResetPasswordForm() {
 	const { theme } = useTheme()
@@ -49,7 +50,7 @@ export function ResetPasswordForm() {
 			heading='Сброс пароля'
 			description='Введите ваш email, чтобы получить ссылку на сброс пароля'
 			backButtonLabel='Войти в аккаунт'
-			backButtonHref='/auth/login'
+			backButtonHref={ROUTES.AUTH.LOGIN}
 		>
 			<Form {...form}>
 				<form

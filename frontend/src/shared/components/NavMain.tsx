@@ -6,7 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/shared/components/ui/Sidebar"
+} from "@/shared/components/ui"
 import { CirclePlusIcon } from "lucide-react"
 import Link from "next/link"
 

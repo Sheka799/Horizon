@@ -23,6 +23,7 @@ import { useLoginMutation } from '../hooks'
 import { LoginSchema, TypeLoginSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
+import { ROUTES } from '@/shared/config'
 
 export function LoginForm() {
 	const { theme } = useTheme()
@@ -52,7 +53,7 @@ export function LoginForm() {
 			heading='Вход'
 			description='Чтобы войти на сайт введите ваш email и пароль'
 			backButtonLabel='Нет аккаунта? Зарегистрироваться'
-			backButtonHref='/auth/register'
+			backButtonHref={ROUTES.AUTH.REGISTER}
 			isShowSocials
 		>
 			<Form {...form}>
@@ -110,7 +111,7 @@ export function LoginForm() {
 										<div className='flex items-center justify-between'>
 											<FormLabel>Пароль</FormLabel>
 											<Link
-												href='/auth/reset-password'
+												href={ROUTES.AUTH.RESET_PASSWORD}
 												className='ml-auto inline-block text-sm underline'
 											>
 												Забыли пароль?

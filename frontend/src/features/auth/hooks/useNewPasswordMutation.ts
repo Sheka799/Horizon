@@ -6,6 +6,7 @@ import { toastMessageHandler } from '@/shared/utils'
 
 import { TypeNewPasswordSchema } from '../schemes'
 import { passwordRecoveryService } from '../services'
+import { ROUTES } from '@/shared/config'
 
 export function useNewPasswordMutation() {
 	const router = useRouter()
@@ -26,7 +27,7 @@ export function useNewPasswordMutation() {
 				toast.success('Пароль успешно изменен', {
 					description: 'Теперь вы можете войти в свой аккаунт'
 				})
-				router.push('/dashboard')
+				router.push(ROUTES.DASHBOARD.ROOT)
 			},
 			onError: error => {
 				toastMessageHandler(error)

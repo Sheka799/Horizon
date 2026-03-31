@@ -22,6 +22,7 @@ import { useNewPasswordMutation } from '../hooks'
 import { NewPasswordSchema, TypeNewPasswordSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
+import { ROUTES } from '@/shared/config'
 
 export function NewPasswordForm() {
 	const { theme } = useTheme()
@@ -49,7 +50,7 @@ export function NewPasswordForm() {
 			heading='Новый пароль'
 			description='Пожалуйста, введите ваш новый пароль'
 			backButtonLabel='Войти в аккаунт'
-			backButtonHref='/auth/login'
+			backButtonHref={ROUTES.AUTH.LOGIN}
 		>
 			<Form {...form}>
 				<form
