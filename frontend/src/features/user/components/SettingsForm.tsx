@@ -25,8 +25,6 @@ import { useProfile } from '@/shared/hooks'
 import { useUpdateProfileMutation } from '../hooks'
 import { SettingSchema, TypeSettingSchema } from '../schemes'
 
-import { UserButton, UserButtonLoading } from './UserButton'
-
 export function SettingsForm() {
 	const { user, isLoading } = useProfile()
 
@@ -51,7 +49,6 @@ export function SettingsForm() {
 		<Card className='w-[400px]'>
 			<CardHeader className='flex flex-row items-center justify-between'>
 				<CardTitle>Настройки профиля</CardTitle>
-				{isLoading ? <UserButtonLoading /> : <UserButton user={user} />}
 			</CardHeader>
 			<CardContent>
 				{isLoading ? (

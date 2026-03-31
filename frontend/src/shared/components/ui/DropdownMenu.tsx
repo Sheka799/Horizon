@@ -2,7 +2,9 @@
 
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react'
+import Link from 'next/link'
 import * as React from 'react'
+import { forwardRef } from 'react'
 
 import { cn } from '@/shared/utils'
 
@@ -87,6 +89,17 @@ function DropdownMenuItem({
 		/>
 	)
 }
+
+const DropdownMenuLinkItem = forwardRef<
+	React.ElementRef<typeof DropdownMenuItem>,
+	React.ComponentProps<typeof DropdownMenuItem> & { href: string }
+>(({ href, children, ...props }, ref) => {
+	return (
+		<DropdownMenuItem ref={ref} asChild {...props}>
+			<Link href={href}>{children}</Link>
+		</DropdownMenuItem>
+	)
+})
 
 function DropdownMenuCheckboxItem({
 	className,
@@ -261,5 +274,6 @@ export {
 	DropdownMenuShortcut,
 	DropdownMenuSub,
 	DropdownMenuSubTrigger,
-	DropdownMenuSubContent
+	DropdownMenuSubContent,
+	DropdownMenuLinkItem
 }

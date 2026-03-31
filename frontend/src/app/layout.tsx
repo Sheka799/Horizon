@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
 	title: {
 		absolute: 'Авторизация',
-		template: '%s | Авторизация'
+		template: '%s | Horizon'
 	},
 	description: 'Страница авторизации для доступа к личному кабинету'
 }
@@ -30,16 +30,14 @@ export default function RootLayout({
 }>) {
 	return (
 		<html
-			lang='ru'
+			lang='ru' suppressHydrationWarning 
 			className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
 		>
 			<body className='flex min-h-full flex-col'>
 				<MainProvider>
 					<div className='relative flex min-h-screen flex-col'>
 						<ToggleTheme />
-						<div className='flex h-screen w-full items-center justify-center px-4'>
-							{children}
-						</div>
+						{children}
 					</div>
 				</MainProvider>
 			</body>

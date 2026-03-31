@@ -9,7 +9,7 @@ export default function middleware(request: NextRequest) {
 
 	if (isAuthPage) {
 		if (session) {
-			return NextResponse.redirect(new URL('/dashboard/settings', url))
+			return NextResponse.redirect(new URL('/dashboard', url))
 		}
 
 		return NextResponse.next()

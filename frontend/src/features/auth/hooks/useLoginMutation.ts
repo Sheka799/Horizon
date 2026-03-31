@@ -27,7 +27,7 @@ export function useLoginMutation(setIsShowTwoFactor: React.Dispatch<React.SetSta
 				toast.success('Успешный вход!', {
 					description: 'Вы успешно вошли в систему'
 				})
-				router.push('/dashboard/settings')
+				router.push('/dashboard')
 			}
 		},
 		onError: error => {

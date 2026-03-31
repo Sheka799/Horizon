@@ -1,11 +1,9 @@
 import { Metadata } from 'next'
 
-import { SettingsForm } from '@/features/user/components'
-
 export const metadata: Metadata = {
-	title: 'Настройки профиля'
+	title: 'Настройки'
 }
 
 export default function SettingsPage() {
-	return <SettingsForm />
+	return <div>Настройки</div>
 }
