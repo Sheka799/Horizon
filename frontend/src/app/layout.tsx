@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from 'next/font/google'
 
 import '../shared/styles/globals.css'
 import { MainProvider } from '@/shared/providers'
-import { ToggleTheme } from '@/shared/components/ui'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -36,7 +35,6 @@ export default function RootLayout({
 			<body className='flex min-h-full flex-col'>
 				<MainProvider>
 					<div className='relative flex min-h-screen flex-col'>
-						<ToggleTheme />
 						{children}
 					</div>
 				</MainProvider>
