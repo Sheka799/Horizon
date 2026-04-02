@@ -7,8 +7,6 @@ import {
 	Button,
 	Card,
 	CardContent,
-	CardHeader,
-	CardTitle,
 	Form,
 	FormControl,
 	FormDescription,
@@ -20,9 +18,8 @@ import {
 	Loader,
 	Switch
 } from '@/shared/components/ui'
-import { useProfile } from '@/shared/hooks'
 
-import { useUpdateProfileMutation } from '../hooks'
+import { useProfile, useUpdateProfileMutation } from '../hooks'
 import { SettingSchema, TypeSettingSchema } from '../schemes'
 
 export function SettingsForm() {

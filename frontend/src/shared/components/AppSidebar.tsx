@@ -8,6 +8,8 @@ import {
 } from 'lucide-react'
 import * as React from 'react'
 
+import { useProfile } from '@/features/user/hooks'
+
 import { NavMain } from '@/shared/components/NavMain'
 import { NavUser } from '@/shared/components/NavUser'
 import {
@@ -20,10 +22,9 @@ import {
 	SidebarMenuItem
 } from '@/shared/components/ui'
 
-import { useProfile } from '../hooks'
+import { ROUTES } from '../config'
 
 import { Loader } from './ui'
-import { ROUTES } from '../config'
 
 const data = {
 	navMain: [

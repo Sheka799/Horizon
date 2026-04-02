@@ -14,6 +14,7 @@ export const ROUTES = {
 	DASHBOARD: {
 		ROOT: '/dashboard',
 		BOARDS: '/dashboard/boards',
+		BOARD: '/dashboard/board',
 		SETTINGS: '/dashboard/settings',
 		PROFILE: '/dashboard/profile'
 	}

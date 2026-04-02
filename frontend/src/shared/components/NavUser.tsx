@@ -6,7 +6,7 @@ import {
 	LogOutIcon
 } from 'lucide-react'
 
-import { useLogoutMutation } from '@/features/user/hooks'
+import { useLogoutMutation, useProfile } from '@/features/user/hooks'
 
 import {
 	Avatar,
@@ -30,7 +30,6 @@ import {
 	useSidebar
 } from '@/shared/components/ui'
 
-import { useProfile } from '../hooks'
 import { ROUTES } from '../config'
 
 export function NavUser() {
@@ -100,7 +99,9 @@ export function NavUser() {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuLinkItem href={ROUTES.DASHBOARD.PROFILE}>
+							<DropdownMenuLinkItem
+								href={ROUTES.DASHBOARD.PROFILE}
+							>
 								<CircleUserRoundIcon />
 								Настройки профиля
 							</DropdownMenuLinkItem>

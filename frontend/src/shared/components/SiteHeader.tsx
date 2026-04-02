@@ -2,9 +2,11 @@
 
 import { usePathname } from 'next/navigation'
 
+import { useBoard } from '@/features/dashboard/hooks'
+
 import { ROUTES } from '../config'
 
-import { Separator, SidebarTrigger } from './ui'
+import { Separator, SidebarTrigger, Skeleton } from './ui'
 
 const TITLES: Record<string, string> = {
 	[ROUTES.DASHBOARD.ROOT]: 'Дашборд',
@@ -15,7 +17,14 @@ const TITLES: Record<string, string> = {
 
 export function SiteHeader() {
 	const pathname = usePathname()
-	const title = TITLES[pathname] ?? 'Дашборд'
+
+	const boardId = pathname.startsWith(ROUTES.DASHBOARD.BOARD + '/')
+		? pathname.split('/').at(-1)
+		: undefined
+
+	const { board, isLoading } = useBoard(boardId ?? '')
+
+	const title = boardId ? board?.title : (TITLES[pathname] ?? 'Дашборд')
 
 	return (
 		<header className='flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)'>
@@ -25,7 +34,11 @@ export function SiteHeader() {
 					orientation='vertical'
 					className='mx-2 data-[orientation=vertical]:h-4'
 				/>
-				<h1 className='text-base font-medium'>{title}</h1>
+				{boardId && isLoading ? (
+					<Skeleton className='h-5 w-32' />
+				) : (
+					<h1 className='text-base font-medium'>{title}</h1>
+				)}
 			</div>
 		</header>
 	)
