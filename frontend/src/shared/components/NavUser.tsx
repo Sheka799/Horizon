@@ -12,7 +12,8 @@ import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-	DropdownMenuLinkItem
+	DropdownMenuLinkItem,
+	Skeleton
 } from '@/shared/components/ui'
 import {
 	DropdownMenu,
@@ -32,11 +33,28 @@ import {
 
 import { ROUTES } from '../config'
 
+function NavUserSkeleton() {
+	return (
+		<SidebarMenu>
+			<SidebarMenuItem>
+				<SidebarMenuButton size='lg' disabled>
+					<Skeleton className='h-8 w-8 rounded-lg' />
+					<div className='grid flex-1 gap-1.5'>
+						<Skeleton className='h-3.5 w-24' />
+						<Skeleton className='h-3 w-32' />
+					</div>
+				</SidebarMenuButton>
+			</SidebarMenuItem>
+		</SidebarMenu>
+	)
+}
+
 export function NavUser() {
 	const { isMobile } = useSidebar()
 	const { logout, isLoadingLogout } = useLogoutMutation()
-	const { user } = useProfile()
+	const { user, isLoading } = useProfile()
 
+	if (isLoading) return <NavUserSkeleton />
 	if (!user) return null
 
 	return (

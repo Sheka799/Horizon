@@ -43,7 +43,7 @@ export function SettingsForm() {
 	if (!user) return null
 
 	return (
-		<Card className='w-[400px]'>
+		<Card className='w-[400px] h-fit'>
 			<CardContent>
 				{isLoading ? (
 					<Loader />

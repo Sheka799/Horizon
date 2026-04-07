@@ -4,7 +4,7 @@ import { boardService } from '../services'
 
 export function useBoard(id: string) {
 	const { data: board, isLoading } = useQuery({
-		queryKey: ['board'],
+		queryKey: ['board', id],
 		queryFn: () => boardService.findById(id)
 	})
 

@@ -8,8 +8,6 @@ import {
 } from 'lucide-react'
 import * as React from 'react'
 
-import { useProfile } from '@/features/user/hooks'
-
 import { NavMain } from '@/shared/components/NavMain'
 import { NavUser } from '@/shared/components/NavUser'
 import {
@@ -47,8 +45,6 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const { isLoading } = useProfile()
-
 	return (
 		<Sidebar collapsible='icon' {...props}>
 			<SidebarHeader>
@@ -72,7 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<NavMain items={data.navMain} />
 			</SidebarContent>
 			<SidebarFooter>
-				{isLoading ? <Loader /> : <NavUser />}
+				<NavUser />
 			</SidebarFooter>
 		</Sidebar>
 	)
