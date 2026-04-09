@@ -4,44 +4,58 @@ import { generateKeyBetween } from 'fractional-indexing'
 import { boardService } from '../services'
 import { Board } from '../types'
 
-export function useMoveColumn(boardId: string) {
+export function useMoveTaskMutation(boardId: string) {
 	const queryClient = useQueryClient()
 
 	return useMutation({
 		mutationFn: ({
 			id,
+			columnId,
 			prevOrder,
 			nextOrder
 		}: {
 			id: string
+			columnId: string
 			prevOrder: string | null
 			nextOrder: string | null
-		}) => boardService.moveColumn(id, { prevOrder, nextOrder }),
+		}) => boardService.moveTask(id, { columnId, prevOrder, nextOrder }),
 
-		onMutate: async ({ id, prevOrder, nextOrder }) => {
+		onMutate: async ({ id, columnId, prevOrder, nextOrder }) => {
 			await queryClient.cancelQueries({ queryKey: ['board', boardId] })
 			const previous = queryClient.getQueryData<Board>(['board', boardId])
 
 			queryClient.setQueryData<Board>(['board', boardId], old => {
 				if (!old) return old
-				
+
+				let task = old.columns
+					.flatMap(c => c.tasks)
+					.find(t => t.id === id)
+				if (!task) return old
+
+				task = {
+					...task,
+					columnId,
+					order: generateKeyBetween(prevOrder, nextOrder)
+				}
+
 				return {
 					...old,
-					columns: old.columns
-						.map(col =>
-							col.id === id
-								? {
-										...col,
-										order: generateKeyBetween(
-											prevOrder,
-											nextOrder
-										)
-									}
-								: col
-						)
-						.sort((a, b) =>
-							a.order < b.order ? -1 : a.order > b.order ? 1 : 0
-						)
+					columns: old.columns.map(col => ({
+						...col,
+						tasks:
+							col.id === columnId
+								? [
+										...col.tasks.filter(t => t.id !== id),
+										task!
+									].sort((a, b) =>
+										a.order < b.order
+											? -1
+											: a.order > b.order
+												? 1
+												: 0
+									)
+								: col.tasks.filter(t => t.id !== id)
+					}))
 				}
 			})
 

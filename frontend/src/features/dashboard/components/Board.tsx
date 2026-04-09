@@ -13,15 +13,15 @@ import {
 	horizontalListSortingStrategy
 } from '@dnd-kit/sortable'
 
-import { useBoard } from '../hooks'
-import { useBoardDnd } from '../hooks/useBoardDnd'
+import { useBoardQuery } from '../hooks'
+import { useBoardDnd } from '../hooks'
 
 import { BoardColumn } from './BoardColumn'
 import { BoardSkeleton } from './BoardSkeleton'
 import { TaskCard } from './TaskCard'
 
 export function Board({ id }: { id: string }) {
-	const { board, isLoading } = useBoard(id)
+	const { board, isLoading } = useBoardQuery(id)
 
 	const columns = [...(board?.columns ?? [])].sort((a, b) =>
 		a.order < b.order ? -1 : a.order > b.order ? 1 : 0

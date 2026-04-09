@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 
-import { useBoard } from '@/features/dashboard/hooks'
+import { useBoardQuery } from '@/features/dashboard/hooks'
 
 import { ROUTES } from '../config'
 
@@ -22,7 +22,7 @@ export function SiteHeader() {
 		? pathname.split('/').at(-1)
 		: undefined
 
-	const { board, isLoading } = useBoard(boardId ?? '')
+	const { board, isLoading } = useBoardQuery(boardId ?? '')
 
 	const title = boardId ? board?.title : (TITLES[pathname] ?? 'Дашборд')
 

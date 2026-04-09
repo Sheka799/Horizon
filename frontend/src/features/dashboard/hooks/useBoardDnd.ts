@@ -4,12 +4,12 @@ import { useRef, useState } from 'react'
 
 import { IColumn, ITask } from '../types'
 
-import { useMoveColumn } from './useMoveColumn'
-import { useMoveTask } from './useMoveTask'
+import { useMoveColumnMutation } from './useMoveColumnMutation'
+import { useMoveTaskMutation } from './useMoveTaskMutation'
 
 export function useBoardDnd(boardId: string, columns: IColumn[]) {
-	const { mutate: moveColumn } = useMoveColumn(boardId)
-	const { mutate: moveTask } = useMoveTask(boardId)
+	const { mutate: moveColumn } = useMoveColumnMutation(boardId)
+	const { mutate: moveTask } = useMoveTaskMutation(boardId)
 
 	const [activeColumn, setActiveColumn] = useState<IColumn | null>(null)
 	const [activeTask, setActiveTask] = useState<ITask | null>(null)
