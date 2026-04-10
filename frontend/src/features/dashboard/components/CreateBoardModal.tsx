@@ -11,9 +11,7 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-	Input
-} from '@/shared/components/ui'
-import {
+	Input,
 	Dialog,
 	DialogClose,
 	DialogContent,

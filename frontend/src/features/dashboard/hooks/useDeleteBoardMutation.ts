@@ -8,7 +8,7 @@ import { boardService } from '../services'
 export function useDeleteBoardMutation() {
 	const queryClient = useQueryClient()
 	const { mutate: deleteBoard, isPending: isDeletingBoard } = useMutation({
-		mutationKey: ['deleteBoard'],
+		mutationKey: ['delete board'],
 		mutationFn: async (id: string) => {
 			await boardService.delete(id)
 		},

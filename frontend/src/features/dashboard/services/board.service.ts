@@ -59,6 +59,14 @@ class BoardService {
 		)) as unknown as void
 		return response
 	}
+
+	public async update(id: string, dto: TypeBoardSchema) {
+		const response = (await axiosWithAuth.patch(
+			`boards/${id}`,
+			dto
+		)) as unknown as Board
+		return response
+	}
 }
 
 export const boardService = new BoardService()

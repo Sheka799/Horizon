@@ -1,9 +1,10 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { MoreHorizontal, PencilIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
-import { Button } from '@/shared/components/ui'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -13,19 +14,56 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
+	Button,
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
-	DropdownMenuTrigger
+	DropdownMenuTrigger,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+	Input,
+	Loader
 } from '@/shared/components/ui'
 
-import { useDeleteBoardMutation } from '../hooks'
+import {
+	useBoardQuery,
+	useDeleteBoardMutation,
+	useUpdateBoardMutation
+} from '../hooks'
+import { BoardSchema, TypeBoardSchema } from '../schemes'
 
 export function BoardMenu({ id }: { id: string }) {
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+
 	const { deleteBoard, isDeletingBoard } = useDeleteBoardMutation()
+
+	const { board } = useBoardQuery(id)
+	const form = useForm<TypeBoardSchema>({
+		resolver: zodResolver(BoardSchema),
+		values: {
+			title: board?.title || ''
+		}
+	})
+
+	const { updateBoard, isUpdatingBoard } = useUpdateBoardMutation()
+	const onSubmit = (values: TypeBoardSchema) => {
+		updateBoard({ id, dto: values })
+		setIsEditDialogOpen(false)
+	}
 
 	return (
 		<>
@@ -40,7 +78,9 @@ export function BoardMenu({ id }: { id: string }) {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<DropdownMenuGroup>
-						<DropdownMenuItem>
+						<DropdownMenuItem
+							onSelect={() => setIsEditDialogOpen(true)}
+						>
 							<PencilIcon />
 							Редактировать
 						</DropdownMenuItem>
@@ -85,6 +125,50 @@ export function BoardMenu({ id }: { id: string }) {
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
+
+			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+				<DialogContent className='sm:max-w-sm'>
+					<DialogHeader className='mb-5'>
+						<DialogTitle>Редактировать доску</DialogTitle>
+						<DialogDescription>
+							Ввекдите новое название доски
+						</DialogDescription>
+					</DialogHeader>
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(onSubmit)}>
+							<FormField
+								control={form.control}
+								name='title'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Название доски</FormLabel>
+										<FormControl>
+											<Input
+												disabled={isUpdatingBoard}
+												placeholder='Введите название доски'
+												type='text'
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<DialogFooter>
+								<DialogClose asChild>
+									<Button variant='outline'>Отмена</Button>
+								</DialogClose>
+								<Button
+									disabled={isUpdatingBoard}
+									type='submit'
+								>
+									Сохранить
+								</Button>
+							</DialogFooter>
+						</form>
+					</Form>
+				</DialogContent>
+			</Dialog>
 		</>
 	)
 }
