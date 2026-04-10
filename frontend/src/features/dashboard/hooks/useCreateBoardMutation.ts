@@ -15,9 +15,7 @@ export function useCreateBoardMutation() {
 		mutationFn: ({ values }: { values: TypeBoardSchema }) =>
 			boardService.create(values),
 		onSuccess(data) {
-            toast.success('Доска успешно создана', {
-                description: 'Вы можете начать добавлять задачи и колонки на свою доску'
-            })
+            toast.success('Доска успешно создана')
 			router.push(`${ROUTES.DASHBOARD.BOARD}/${data.id}`)
         },
 		onError(error) {

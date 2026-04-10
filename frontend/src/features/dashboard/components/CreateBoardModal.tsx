@@ -27,7 +27,7 @@ import {
 import { useCreateBoardMutation } from '../hooks'
 import { BoardSchema, TypeBoardSchema } from '../schemes'
 
-export function BoardModal() {
+export function CreateBoardModal() {
 	const form = useForm<TypeBoardSchema>({
 		resolver: zodResolver(BoardSchema),
 		defaultValues: {

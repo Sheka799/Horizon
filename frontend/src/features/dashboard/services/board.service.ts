@@ -1,7 +1,7 @@
 import { axiosWithAuth } from '@/shared/api'
 
-import { Board } from '../types'
 import { TypeBoardSchema } from '../schemes'
+import { Board } from '../types'
 
 interface MoveColumnDto {
 	prevOrder: string | null
@@ -50,6 +50,13 @@ class BoardService {
 			'boards',
 			dto
 		)) as unknown as Board
+		return response
+	}
+
+	public async delete(id: string) {
+		const response = (await axiosWithAuth.delete(
+			`boards/${id}`
+		)) as unknown as void
 		return response
 	}
 }

@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import {
 	Card,
+	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
@@ -13,7 +14,8 @@ import { ROUTES } from '@/shared/config'
 
 import { useBoardsQuery } from '../hooks'
 
-import { BoardModal } from './BoardModal'
+import { BoardMenu } from './BoardMenu'
+import { CreateBoardModal } from './CreateBoardModal'
 
 function BoardSkeleton() {
 	return (
@@ -33,26 +35,32 @@ export function Boards() {
 
 	return (
 		<div className='flex w-full flex-col'>
-			<BoardModal />
+			<CreateBoardModal />
 			<div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4'>
 				{isLoading
 					? Array.from({ length: 4 }).map((_, i) => (
 							<BoardSkeleton key={i} />
 						))
 					: boards?.map(board => (
-							<Link
-								href={`${ROUTES.DASHBOARD.BOARD}/${board.id}`}
+							<Card
+								className='@container/card relative p-0'
 								key={board.id}
 							>
-								<Card className='@container/card'>
-									<CardHeader>
-										<CardTitle className='text-xl font-semibold tabular-nums @[250px]/card:text-2xl'>
-											{board.title}
-										</CardTitle>
-									</CardHeader>
-									<CardFooter className='flex-col items-start gap-1.5 text-sm' />
-								</Card>
-							</Link>
+								<Link
+									href={`${ROUTES.DASHBOARD.BOARD}/${board.id}`}
+								>
+									<CardContent className='py-6 px-0'>
+										<CardHeader>
+											<CardTitle className='text-xl font-semibold tabular-nums @[250px]/card:text-2xl'>
+												{board.title}
+											</CardTitle>
+										</CardHeader>
+										<CardFooter className='flex-col items-start gap-1.5 text-sm' />
+									</CardContent>
+								</Link>
+
+								<BoardMenu id={board.id} />
+							</Card>
 						))}
 			</div>
 		</div>
