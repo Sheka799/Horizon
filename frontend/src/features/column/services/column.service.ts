@@ -13,6 +13,14 @@ class ColumnService {
 		)) as unknown as void
 		return response
 	}
+
+	public async create(boardId: string, title: string) {
+		const response = (await axiosWithAuth.post('columns', {
+			boardId,
+			title
+		})) as unknown as void
+		return response
+	}
 }
 
 export const columnService = new ColumnService()

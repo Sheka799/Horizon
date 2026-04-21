@@ -2,7 +2,7 @@ import { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import { useRef, useState } from 'react'
 
-import { useMoveColumnMutation } from '@/features/column/hooks/useMoveColumnMutation'
+import { useMoveColumnMutation } from '@/features/column/hooks'
 import { useMoveTaskMutation } from '@/features/task/hooks'
 
 import { IColumn, ITask } from '../types'

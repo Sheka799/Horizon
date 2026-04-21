@@ -12,17 +12,9 @@ import {
 	SortableContext,
 	horizontalListSortingStrategy
 } from '@dnd-kit/sortable'
-import { Plus } from 'lucide-react'
 
-import { Column } from '@/features/column/components'
+import { Column, CreateColumnModal } from '@/features/column/components'
 import { Task } from '@/features/task/components'
-
-import {
-	Button,
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger
-} from '@/shared/components/ui'
 
 import { useBoardQuery } from '../hooks'
 import { useBoardDnd } from '../hooks'
@@ -63,18 +55,7 @@ export function Board({ id }: { id: string }) {
 						<Column key={column.id} column={column} />
 					))}
 				</SortableContext>
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<span className='h-fit'>
-							<Button variant='ghost' className='h-8 w-8 p-0'>
-								<Plus className='h-4 w-4' />
-							</Button>
-						</span>
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>Добавить колонку</p>
-					</TooltipContent>
-				</Tooltip>
+				<CreateColumnModal />
 			</div>
 
 			<DragOverlay>
