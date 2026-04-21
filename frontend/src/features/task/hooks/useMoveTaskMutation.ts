@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { generateKeyBetween } from 'fractional-indexing'
 
-import { boardService } from '../services'
-import { Board } from '../types'
+import { Board } from '@/features/dashboard/types'
+
+import { taskService } from '../services'
 
 export function useMoveTaskMutation(boardId: string) {
 	const queryClient = useQueryClient()
@@ -18,7 +19,7 @@ export function useMoveTaskMutation(boardId: string) {
 			columnId: string
 			prevOrder: string | null
 			nextOrder: string | null
-		}) => boardService.moveTask(id, { columnId, prevOrder, nextOrder }),
+		}) => taskService.moveTask(id, { columnId, prevOrder, nextOrder }),
 
 		onMutate: async ({ id, columnId, prevOrder, nextOrder }) => {
 			await queryClient.cancelQueries({ queryKey: ['board', boardId] })

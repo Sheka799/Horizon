@@ -2,14 +2,15 @@
 
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { ITask } from '../types'
+
+import { ITask } from '@/features/dashboard/types'
 
 interface TaskCardProps {
 	task: ITask
 	overlay?: boolean
 }
 
-export function TaskCard({ task, overlay }: TaskCardProps) {
+export function Task({ task, overlay }: TaskCardProps) {
 	const {
 		setNodeRef,
 		attributes,

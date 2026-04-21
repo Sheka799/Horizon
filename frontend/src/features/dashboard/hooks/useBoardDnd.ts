@@ -2,10 +2,10 @@ import { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import { useRef, useState } from 'react'
 
-import { IColumn, ITask } from '../types'
+import { useMoveColumnMutation } from '@/features/column/hooks/useMoveColumnMutation'
+import { useMoveTaskMutation } from '@/features/task/hooks'
 
-import { useMoveColumnMutation } from './useMoveColumnMutation'
-import { useMoveTaskMutation } from './useMoveTaskMutation'
+import { IColumn, ITask } from '../types'
 
 export function useBoardDnd(boardId: string, columns: IColumn[]) {
 	const { mutate: moveColumn } = useMoveColumnMutation(boardId)

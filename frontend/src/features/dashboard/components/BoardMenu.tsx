@@ -34,8 +34,7 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-	Input,
-	Loader
+	Input
 } from '@/shared/components/ui'
 
 import {

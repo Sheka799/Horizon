@@ -1,7 +1,5 @@
 export * from './useBoardsQuery'
 export * from './useBoardQuery'
-export * from './useMoveColumnMutation'
-export * from './useMoveTaskMutation'
 export * from './useCreateBoardMutation'
 export * from './useBoardDnd'
 export * from './useDeleteBoardMutation'

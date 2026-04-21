@@ -7,16 +7,15 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-import { IColumn } from '../types'
-
-import { TaskCard } from './TaskCard'
+import { IColumn } from '@/features/dashboard/types'
+import { Task } from '@/features/task/components'
 
 interface BoardColumnProps {
 	column: IColumn
 	overlay?: boolean
 }
 
-export function BoardColumn({ column, overlay }: BoardColumnProps) {
+export function Column({ column, overlay }: BoardColumnProps) {
 	const {
 		setNodeRef,
 		attributes,
@@ -63,7 +62,7 @@ export function BoardColumn({ column, overlay }: BoardColumnProps) {
 			>
 				<div className='flex flex-col gap-2'>
 					{tasks.map(task => (
-						<TaskCard key={task.id} task={task} />
+						<Task key={task.id} task={task} />
 					))}
 					{tasks.length === 0 && (
 						<div className='text-muted-foreground rounded-lg border border-dashed p-4 text-center text-xs'>

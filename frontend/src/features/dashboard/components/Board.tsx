@@ -12,13 +12,22 @@ import {
 	SortableContext,
 	horizontalListSortingStrategy
 } from '@dnd-kit/sortable'
+import { Plus } from 'lucide-react'
+
+import { Column } from '@/features/column/components'
+import { Task } from '@/features/task/components'
+
+import {
+	Button,
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger
+} from '@/shared/components/ui'
 
 import { useBoardQuery } from '../hooks'
 import { useBoardDnd } from '../hooks'
 
-import { BoardColumn } from './BoardColumn'
 import { BoardSkeleton } from './BoardSkeleton'
-import { TaskCard } from './TaskCard'
 
 export function Board({ id }: { id: string }) {
 	const { board, isLoading } = useBoardQuery(id)
@@ -51,14 +60,26 @@ export function Board({ id }: { id: string }) {
 					strategy={horizontalListSortingStrategy}
 				>
 					{columns.map(column => (
-						<BoardColumn key={column.id} column={column} />
+						<Column key={column.id} column={column} />
 					))}
 				</SortableContext>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<span className='h-fit'>
+							<Button variant='ghost' className='h-8 w-8 p-0'>
+								<Plus className='h-4 w-4' />
+							</Button>
+						</span>
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>Добавить колонку</p>
+					</TooltipContent>
+				</Tooltip>
 			</div>
 
 			<DragOverlay>
-				{activeColumn && <BoardColumn column={activeColumn} overlay />}
-				{activeTask && <TaskCard task={activeTask} overlay />}
+				{activeColumn && <Column column={activeColumn} overlay />}
+				{activeTask && <Task task={activeTask} overlay />}
 			</DragOverlay>
 		</DndContext>
 	)
