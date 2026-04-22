@@ -6,6 +6,28 @@ import { UpdateColumnDto } from './dto/update-column.dto'
 
 @Injectable()
 export class ColumnService {
+	public async findById(userId: string, id: string) {
+		const column = await prisma.column.findFirst({
+			where: {
+				id,
+				board: {
+					userId
+				}
+			},
+			include: {
+				tasks: {
+					orderBy: { order: 'asc' }
+				}
+			}
+		})
+
+		if (!column) {
+			throw new NotFoundException('Колонка не найдена')
+		}
+
+		return column
+	}
+
 	public async delete(userId: string, id: string) {
 		const column = await prisma.column.findFirst({
 			where: {

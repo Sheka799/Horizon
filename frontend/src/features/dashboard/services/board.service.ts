@@ -3,17 +3,6 @@ import { axiosWithAuth } from '@/shared/api'
 import { TypeBoardSchema } from '../schemes'
 import { Board } from '../types'
 
-interface MoveColumnDto {
-	prevOrder: string | null
-	nextOrder: string | null
-}
-
-interface MoveTaskDto {
-	columnId: string
-	prevOrder: string | null
-	nextOrder: string | null
-}
-
 class BoardService {
 	public async findAll() {
 		const response = (await axiosWithAuth.get(
@@ -26,22 +15,6 @@ class BoardService {
 		const response = (await axiosWithAuth.get(
 			`boards/${id}`
 		)) as unknown as Board
-		return response
-	}
-
-	public async moveColumn(id: string, dto: MoveColumnDto) {
-		const response = (await axiosWithAuth.patch(
-			`columns/${id}`,
-			dto
-		)) as unknown as void
-		return response
-	}
-
-	public async moveTask(id: string, dto: MoveTaskDto) {
-		const response = (await axiosWithAuth.patch(
-			`tasks/${id}`,
-			dto
-		)) as unknown as void
 		return response
 	}
 

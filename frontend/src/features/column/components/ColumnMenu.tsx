@@ -38,29 +38,30 @@ import {
 } from '@/shared/components/ui'
 
 import {
-	useBoardQuery,
-	useDeleteBoardMutation,
-	useUpdateBoardMutation
+	useColumnQuery,
+	useDeleteColumnMutation,
+	useUpdateColumnMutation
 } from '../hooks'
-import { BoardSchema, TypeBoardSchema } from '../schemes'
+import { ColumnSchema, TypeColumnSchema } from '../schemes'
 
-export function BoardMenu({ id }: { id: string }) {
+export function ColumnMenu({ id }: { id: string }) {
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
-	const { deleteBoard, isDeletingBoard } = useDeleteBoardMutation()
+	const { deleteColumn, isDeletingColumn } = useDeleteColumnMutation()
 
-	const { board } = useBoardQuery(id)
-	const form = useForm<TypeBoardSchema>({
-		resolver: zodResolver(BoardSchema),
+	const { column } = useColumnQuery(id)
+	const form = useForm<TypeColumnSchema>({
+		resolver: zodResolver(ColumnSchema),
 		values: {
-			title: board?.title || ''
+			title: column?.title || '',
+			boardId: column?.boardId || ''
 		}
 	})
 
-	const { updateBoard, isUpdatingBoard } = useUpdateBoardMutation()
-	const onSubmit = (values: TypeBoardSchema) => {
-		updateBoard({ id, dto: values })
+	const { updateColumn, isUpdatingColumn } = useUpdateColumnMutation()
+	const onSubmit = (values: TypeColumnSchema) => {
+		updateColumn({ id, dto: values })
 		setIsEditDialogOpen(false)
 	}
 
@@ -106,18 +107,18 @@ export function BoardMenu({ id }: { id: string }) {
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
-							Вы уверены, что хотите удалить эту доску?
+							Вы уверены, что хотите удалить эту колонку?
 						</AlertDialogTitle>
 						<AlertDialogDescription>
-							Если вы удалите эту доску, все ее данные будут
+							Если вы удалите эту колонку, все ее данные будут
 							безвозвратно удалены
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel>Отмена</AlertDialogCancel>
 						<AlertDialogAction
-							disabled={isDeletingBoard}
-							onClick={() => deleteBoard(id)}
+							disabled={isDeletingColumn}
+							onClick={() => deleteColumn(id)}
 						>
 							Продолжить
 						</AlertDialogAction>
@@ -128,9 +129,9 @@ export function BoardMenu({ id }: { id: string }) {
 			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
 				<DialogContent className='sm:max-w-sm'>
 					<DialogHeader className='mb-5'>
-						<DialogTitle>Редактировать доску</DialogTitle>
+						<DialogTitle>Редактировать колонку</DialogTitle>
 						<DialogDescription>
-							Введите новое название доски
+							Введите новое название колонки
 						</DialogDescription>
 					</DialogHeader>
 					<Form {...form}>
@@ -140,11 +141,11 @@ export function BoardMenu({ id }: { id: string }) {
 								name='title'
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Название доски</FormLabel>
+										<FormLabel>Название колонки</FormLabel>
 										<FormControl>
 											<Input
-												disabled={isUpdatingBoard}
-												placeholder='Введите название доски'
+												disabled={isUpdatingColumn}
+												placeholder='Введите название колонки'
 												type='text'
 												{...field}
 											/>
@@ -158,7 +159,7 @@ export function BoardMenu({ id }: { id: string }) {
 									<Button variant='outline'>Отмена</Button>
 								</DialogClose>
 								<Button
-									disabled={isUpdatingBoard}
+									disabled={isUpdatingColumn}
 									type='submit'
 								>
 									Сохранить

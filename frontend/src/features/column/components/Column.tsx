@@ -9,6 +9,7 @@ import { CSS } from '@dnd-kit/utilities'
 
 import { IColumn } from '@/features/dashboard/types'
 import { Task } from '@/features/task/components'
+import { ColumnMenu } from './ColumnMenu'
 
 interface BoardColumnProps {
 	column: IColumn
@@ -41,19 +42,23 @@ export function Column({ column, overlay }: BoardColumnProps) {
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`bg-muted/40 flex h-fit w-72 shrink-0 flex-col gap-3 rounded-lg border p-3 ${
+			className={`bg-muted/40 relative flex h-fit w-72 shrink-0 flex-col gap-3 rounded-lg border p-3 ${
 				isDragging ? 'opacity-50' : ''
 			} ${overlay ? 'rotate-2 shadow-xl' : ''}`}
 		>
 			<div
 				{...attributes}
 				{...listeners}
-				className='flex cursor-grab items-center justify-between active:cursor-grabbing'
+				className='flex cursor-grab items-center justify-between active:cursor-grabbing gap-2'
 			>
-				<h2 className='text-sm font-medium'>{column.title}</h2>
-				<span className='text-muted-foreground text-xs'>
-					{tasks.length}
-				</span>
+				<div className='flex items-center gap-2'>
+					<h2 className='text-sm font-medium'>{column.title}</h2>
+					{tasks.length > 0 && (
+						<span className='text-muted-foreground text-md'>
+							{tasks.length}
+						</span>
+					)}
+				</div>
 			</div>
 
 			<SortableContext
@@ -70,6 +75,7 @@ export function Column({ column, overlay }: BoardColumnProps) {
 						</div>
 					)}
 				</div>
+				<ColumnMenu id={column.id} />
 			</SortableContext>
 		</div>
 	)

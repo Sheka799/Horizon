@@ -2,6 +2,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	Get,
 	HttpCode,
 	HttpStatus,
 	Param,
@@ -17,6 +18,13 @@ import { UpdateColumnDto } from './dto/update-column.dto'
 @Controller('columns')
 export class ColumnController {
 	constructor(private readonly columnService: ColumnService) {}
+
+	@Authorization()
+	@HttpCode(HttpStatus.OK)
+	@Get(':id')
+	async findById(@Authorized('id') userId: string, @Param('id') id: string) {
+		return this.columnService.findById(userId, id)
+	}
 
 	@Authorization()
 	@HttpCode(HttpStatus.NO_CONTENT)
