@@ -11,11 +11,11 @@ import { Priority } from '@prisma/generated/prisma/enums'
 export class CreateTaskDto {
 	@IsString({ message: 'Название должно быть строкой' })
 	@IsNotEmpty({ message: 'Название не может быть пустым' })
-	name: string
+	name: string = ''
 
 	@IsString({ message: 'ID колонки должно быть строкой' })
 	@IsNotEmpty({ message: 'ID колонки обязательно' })
-	columnId: string
+	columnId: string = ''
 
 	@IsEnum(Priority, { message: 'Неверный приоритет' })
 	@IsOptional()

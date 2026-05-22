@@ -22,8 +22,6 @@ import {
 
 import { ROUTES } from '../config'
 
-import { Loader } from './ui'
-
 const data = {
 	navMain: [
 		{

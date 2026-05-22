@@ -34,7 +34,10 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-	Input
+	Input,
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger
 } from '@/shared/components/ui'
 
 import {
@@ -69,12 +72,23 @@ export function ColumnMenu({ id }: { id: string }) {
 		<>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button
-						variant='ghost'
-						className='absolute top-1 right-1 h-8 w-8 p-0'
-					>
-						<MoreHorizontal className='h-4 w-4' />
-					</Button>
+					<div className='h-fit'>
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className='h-fit'>
+									<Button
+										variant='ghost'
+										className='h-8 w-8 p-0'
+									>
+										<MoreHorizontal className='h-4 w-4' />
+									</Button>
+								</span>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Меню колонки</p>
+							</TooltipContent>
+						</Tooltip>
+					</div>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<DropdownMenuGroup>

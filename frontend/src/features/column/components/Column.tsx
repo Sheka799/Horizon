@@ -8,7 +8,8 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 
 import { IColumn } from '@/features/dashboard/types'
-import { Task } from '@/features/task/components'
+import { CreateTaskModal, Task } from '@/features/task/components'
+
 import { ColumnMenu } from './ColumnMenu'
 
 interface BoardColumnProps {
@@ -49,15 +50,21 @@ export function Column({ column, overlay }: BoardColumnProps) {
 			<div
 				{...attributes}
 				{...listeners}
-				className='flex cursor-grab items-center justify-between active:cursor-grabbing gap-2'
+				className='flex cursor-grab items-center justify-between gap-2 active:cursor-grabbing'
 			>
-				<div className='flex items-center gap-2'>
-					<h2 className='text-sm font-medium'>{column.title}</h2>
-					{tasks.length > 0 && (
-						<span className='text-muted-foreground text-md'>
-							{tasks.length}
-						</span>
-					)}
+				<div className='flex items-center gap-2 justify-between w-full'>
+					<div className='flex items-center gap-2'>
+						<h3 className='text-sm font-medium'>{column.title}</h3>
+						{tasks.length > 0 && (
+							<span className='text-muted-foreground text-md'>
+								{tasks.length}
+							</span>
+						)}
+					</div>
+					<div className='flex align-center gap-1'>
+						<CreateTaskModal id={column.id} />
+						<ColumnMenu id={column.id} />
+					</div>
 				</div>
 			</div>
 
@@ -75,7 +82,6 @@ export function Column({ column, overlay }: BoardColumnProps) {
 						</div>
 					)}
 				</div>
-				<ColumnMenu id={column.id} />
 			</SortableContext>
 		</div>
 	)
