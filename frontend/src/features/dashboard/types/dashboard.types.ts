@@ -9,7 +9,7 @@ export interface ITask {
 	name: string
 	priority: EPriority | null
 	isCompleted: boolean
-	dueDate: Date | null
+	dueDate: string | null
 	order: string
 	createdAt: string
 	updatedAt: string

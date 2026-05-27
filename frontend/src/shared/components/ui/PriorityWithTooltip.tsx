@@ -34,7 +34,7 @@ export const PriorityWithTooltip = ({
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
-				<p className='flex items-center gap-1 text-xs'>
+				<p className='flex items-center gap-1 text-sm'>
 					<Icon className={className} />
 					{showLabel && <span>{label}</span>}
 				</p>

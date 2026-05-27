@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 
 import { ITask } from '@/features/dashboard/types'
 
-import { PriorityWithTooltip } from '@/shared/components/ui'
+import { DueDateDisplay, PriorityWithTooltip } from '@/shared/components/ui'
 
 import { TaskMenu } from './TaskMenu'
 import { TaskSheet } from './TaskSheet'
@@ -84,12 +84,8 @@ export function Task({ task, overlay }: TaskCardProps) {
 					/>
 				</div>
 				<p className='text-sm font-medium'>{task.name}</p>
-				<div className='mt-2 flex items-center gap-2'>
-					{task.dueDate && (
-						<span className='text-muted-foreground text-xs'>
-							{new Date(task.dueDate).toLocaleDateString('ru-RU')}
-						</span>
-					)}
+				<div className='mt-2 text-xs'>
+					{task.dueDate && <DueDateDisplay dueDate={task.dueDate} />}
 				</div>
 			</div>
 			<TaskSheet

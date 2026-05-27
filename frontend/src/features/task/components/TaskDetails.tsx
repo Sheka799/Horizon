@@ -1,6 +1,6 @@
 'use client'
 
-import { PriorityWithTooltip } from '@/shared/components/ui'
+import { DueDateDisplay, PriorityWithTooltip } from '@/shared/components/ui'
 
 import { useTaskQuery } from '../hooks'
 
@@ -65,9 +65,11 @@ export function TaskDetails({ taskId }: { taskId: string }) {
 				<li className='grid grid-cols-[120px_1fr] items-center gap-1'>
 					<h4 className='text-sm font-semibold'>Дедлайн</h4>
 					<p className='text-muted-foreground text-sm'>
-						{task.dueDate
-							? new Date(task.dueDate).toLocaleDateString('ru-RU')
-							: '—'}
+						{task.dueDate ? (
+							<DueDateDisplay dueDate={task.dueDate} />
+						) : (
+							'—'
+						)}
 					</p>
 				</li>
 			</ul>

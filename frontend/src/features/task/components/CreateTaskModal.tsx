@@ -1,5 +1,7 @@
+'use client'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Plus } from 'lucide-react'
+import { CalendarIcon, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -7,6 +9,7 @@ import { EPriority } from '@/features/dashboard/types'
 
 import {
 	Button,
+	Calendar,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -22,6 +25,9 @@ import {
 	FormLabel,
 	FormMessage,
 	Input,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 	Select,
 	SelectContent,
 	SelectGroup,
@@ -44,7 +50,8 @@ export function CreateTaskModal({ id }: { id: string }) {
 		defaultValues: {
 			name: '',
 			columnId: id,
-			priority: ''
+			priority: '',
+			dueDate: undefined
 		}
 	})
 
@@ -56,10 +63,16 @@ export function CreateTaskModal({ id }: { id: string }) {
 			columnId: values.columnId,
 			priority: values.priority
 				? (values.priority as EPriority)
-				: EPriority.Medium
+				: EPriority.Medium,
+			dueDate: values.dueDate
 		})
 		form.reset()
 		setIsOpen(false)
+	}
+
+	// Обработка выбора даты
+	const handleDateSelect = (date: Date | undefined) => {
+		form.setValue('dueDate', date ? date.toISOString() : undefined)
 	}
 
 	return (
@@ -88,12 +101,16 @@ export function CreateTaskModal({ id }: { id: string }) {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className='space-y-5'
+					>
+						{/* Название */}
 						<FormField
 							control={form.control}
 							name='name'
 							render={({ field }) => (
-								<FormItem className='mb-5'>
+								<FormItem>
 									<FormLabel>Название задачи</FormLabel>
 									<FormControl>
 										<Input
@@ -106,6 +123,8 @@ export function CreateTaskModal({ id }: { id: string }) {
 								</FormItem>
 							)}
 						/>
+
+						{/* Приоритет */}
 						<FormField
 							control={form.control}
 							name='priority'
@@ -139,6 +158,56 @@ export function CreateTaskModal({ id }: { id: string }) {
 								</FormItem>
 							)}
 						/>
+
+						{/* Дедлайн */}
+						<FormField
+							control={form.control}
+							name='dueDate'
+							render={({ field }) => (
+								<FormItem className='flex flex-col'>
+									<FormLabel>Дедлайн</FormLabel>
+									<Popover>
+										<PopoverTrigger asChild>
+											<FormControl>
+												<Button
+													variant='outline'
+													className='w-full justify-start text-left font-normal'
+												>
+													<CalendarIcon className='mr-2 h-4 w-4' />
+													{field.value
+														? new Date(
+																field.value
+															).toLocaleDateString(
+																'ru-RU'
+															)
+														: 'Выберите дату'}
+												</Button>
+											</FormControl>
+										</PopoverTrigger>
+										<PopoverContent
+											className='w-auto p-0'
+											align='start'
+										>
+											<Calendar
+												mode='single'
+												selected={
+													field.value
+														? new Date(field.value)
+														: undefined
+												}
+												onSelect={handleDateSelect}
+												disabled={(date: Date) =>
+													date <
+													new Date('1900-01-01')
+												}
+											/>
+										</PopoverContent>
+									</Popover>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button variant='outline'>Отмена</Button>

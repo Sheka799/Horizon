@@ -23,7 +23,8 @@ class TaskService {
 		const response = (await axiosWithAuth.post('tasks', {
 			columnId: taskData.columnId,
 			name: taskData.name,
-			priority: taskData.priority
+			priority: taskData.priority,
+			dueDate: taskData.dueDate
 		})) as unknown as ITask
 		return response
 	}
