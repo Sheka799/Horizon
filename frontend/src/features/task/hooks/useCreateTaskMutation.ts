@@ -4,13 +4,14 @@ import { toast } from 'sonner'
 import { toastMessageHandler } from '@/shared/utils'
 
 import { taskService } from '../services'
+import { CreateTaskData } from '../types'
 
 export function useCreateTaskMutation() {
 	const queryClient = useQueryClient()
 	const { mutate: createTask, isPending: isCreatingTask } = useMutation({
 		mutationKey: ['create task'],
-		mutationFn: ({ columnId, name, priority }: { columnId: string; name: string, priority: string }) =>
-			taskService.create(columnId, name, priority),
+		mutationFn: (taskData: CreateTaskData) =>
+			taskService.create(taskData),
 		onSuccess() {
 			queryClient.invalidateQueries({ queryKey: ['board'] })
 			toast.success('Задача успешно создана')

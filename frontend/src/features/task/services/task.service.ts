@@ -1,4 +1,8 @@
+import { ITask } from '@/features/dashboard/types'
+
 import { axiosWithAuth } from '@/shared/api'
+
+import { CreateTaskData } from '../types'
 
 interface MoveTaskDto {
 	columnId: string
@@ -15,12 +19,12 @@ class TaskService {
 		return response
 	}
 
-	public async create(columnId: string, name: string, priority: string) {
+	public async create(taskData: CreateTaskData) {
 		const response = (await axiosWithAuth.post('tasks', {
-			columnId,
-			name,
-			priority
-		})) as unknown as void
+			columnId: taskData.columnId,
+			name: taskData.name,
+			priority: taskData.priority
+		})) as unknown as ITask
 		return response
 	}
 
@@ -28,6 +32,13 @@ class TaskService {
 		const response = (await axiosWithAuth.delete(
 			`tasks/${id}`
 		)) as unknown as void
+		return response
+	}
+
+	public async findById(id: string) {
+		const response = (await axiosWithAuth.get(
+			`tasks/${id}`
+		)) as unknown as ITask
 		return response
 	}
 }

@@ -24,8 +24,17 @@ import {
 
 import { useDeleteTaskMutation } from '../hooks'
 
-export function TaskMenu({ id }: { id: string }) {
-	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+interface TaskMenuProps {
+	id: string
+	isDeleteDialogOpen: boolean
+	onOpenChange: (open: boolean) => void
+}
+
+export function TaskMenu({
+	id,
+	isDeleteDialogOpen,
+	onOpenChange
+}: TaskMenuProps) {
 	const { deleteTask, isDeletingTask } = useDeleteTaskMutation()
 
 	return (
@@ -55,7 +64,7 @@ export function TaskMenu({ id }: { id: string }) {
 						<DropdownMenuItem
 							variant='destructive'
 							onSelect={() => {
-								setIsDeleteDialogOpen(true)
+								onOpenChange(true)
 							}}
 						>
 							<TrashIcon />
@@ -65,10 +74,7 @@ export function TaskMenu({ id }: { id: string }) {
 				</DropdownMenuContent>
 			</DropdownMenu>
 
-			<AlertDialog
-				open={isDeleteDialogOpen}
-				onOpenChange={setIsDeleteDialogOpen}
-			>
+			<AlertDialog open={isDeleteDialogOpen} onOpenChange={onOpenChange}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>

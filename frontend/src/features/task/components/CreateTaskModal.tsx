@@ -3,6 +3,8 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
+import { EPriority } from '@/features/dashboard/types'
+
 import {
 	Button,
 	Dialog,
@@ -52,7 +54,9 @@ export function CreateTaskModal({ id }: { id: string }) {
 		createTask({
 			name: values.name,
 			columnId: values.columnId,
-			priority: values.priority ? values.priority : 'MEDIUM'
+			priority: values.priority
+				? (values.priority as EPriority)
+				: EPriority.Medium
 		})
 		form.reset()
 		setIsOpen(false)

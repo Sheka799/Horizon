@@ -1,3 +1,6 @@
 export * from './Task'
 export * from './CreateTaskModal'
 export * from './TaskMenu'
+export * from './TaskSheet'
+export * from './TaskDetails'
+export * from './TaskDetailsSkeleton'
