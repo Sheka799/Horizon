@@ -63,13 +63,22 @@ export function useBoardDnd(boardId: string, columns: IColumn[]) {
 			const tasks = [
 				...(cols.find(c => c.id === overTask.columnId)?.tasks ?? [])
 			].sort((a, b) => (a.order < b.order ? -1 : 1))
+
 			const overIndex = tasks.findIndex(t => t.id === overTask.id)
+			const activeIndex = tasks.findIndex(t => t.id === activeTask.id)
+
+			// Если тащим вниз — вставляем после overTask, если вверх — перед
+			const insertAfter = activeIndex < overIndex
 
 			moveTask({
 				id: activeTask.id,
 				columnId: overTask.columnId,
-				prevOrder: tasks[overIndex - 1]?.order ?? null,
-				nextOrder: tasks[overIndex]?.order ?? null
+				prevOrder: insertAfter
+					? (tasks[overIndex]?.order ?? null)
+					: (tasks[overIndex - 1]?.order ?? null),
+				nextOrder: insertAfter
+					? (tasks[overIndex + 1]?.order ?? null)
+					: (tasks[overIndex]?.order ?? null)
 			})
 		}
 

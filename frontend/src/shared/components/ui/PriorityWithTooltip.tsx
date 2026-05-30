@@ -39,9 +39,11 @@ export const PriorityWithTooltip = ({
 					{showLabel && <span>{label}</span>}
 				</p>
 			</TooltipTrigger>
-			<TooltipContent>
-				<p>{label}</p>
-			</TooltipContent>
+			{!showLabel && (
+				<TooltipContent>
+					<p>{label}</p>
+				</TooltipContent>
+			)}
 		</Tooltip>
 	)
 }

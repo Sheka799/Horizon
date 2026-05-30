@@ -3,6 +3,7 @@
 import {
 	Sheet,
 	SheetContent,
+	SheetDescription,
 	SheetHeader,
 	SheetTitle
 } from '@/shared/components/ui'
@@ -24,6 +25,7 @@ export function TaskSheet({ taskId, open, onOpenChange }: TaskSheetProps) {
 			>
 				<SheetHeader>
 					<SheetTitle>Детали задачи</SheetTitle>
+					<SheetDescription aria-describedby={undefined} />
 				</SheetHeader>
 				<div className='px-6 pb-6'>
 					<TaskDetails taskId={taskId} />
