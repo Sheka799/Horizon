@@ -134,6 +134,7 @@ export const ColumnScalarFieldEnum = {
   id: 'id',
   title: 'title',
   order: 'order',
+  isDoneColumn: 'isDoneColumn',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   boardId: 'boardId'
@@ -146,9 +147,12 @@ export const TaskScalarFieldEnum = {
   id: 'id',
   name: 'name',
   priority: 'priority',
-  isCompleted: 'isCompleted',
   dueDate: 'dueDate',
   order: 'order',
+  status: 'status',
+  isArchived: 'isArchived',
+  completedAt: 'completedAt',
+  archivedAt: 'archivedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   columnId: 'columnId'

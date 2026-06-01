@@ -86,6 +86,8 @@ model Column {
   order String @default("a0")
   tasks Task[]
 
+  isDoneColumn Boolean @default(false) @map("is_done_column")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -100,9 +102,13 @@ model Task {
 
   name        String
   priority    Priority?
-  isCompleted Boolean   @default(false) @map("is_completed")
   dueDate     DateTime? @map("due_date")
   order       String    @default("a0")
+
+  status      TaskStatus @default(ACTIVE)
+  isArchived  Boolean    @default(false) @map("is_archived")
+  completedAt DateTime?  @map("completed_at")
+  archivedAt  DateTime?  @map("archived_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -110,6 +116,8 @@ model Task {
   column   Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId String @map("column_id")
 
+  @@index([isArchived])
+  @@index([status])
   @@map("tasks")
 }
 
@@ -134,4 +142,9 @@ enum Priority {
   LOW
   MEDIUM
   HIGH
+}
+
+enum TaskStatus {
+  ACTIVE
+  DONE
 }

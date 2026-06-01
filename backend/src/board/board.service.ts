@@ -27,6 +27,7 @@ export class BoardService {
 				columns: {
 					include: {
 						tasks: {
+							where: { isArchived: false },
 							orderBy: { order: 'asc' }
 						}
 					},
@@ -55,9 +56,21 @@ export class BoardService {
 				userId,
 				columns: {
 					create: [
-						{ title: 'К исполнению', order: orderCol1 },
-						{ title: 'В работе', order: orderCol2 },
-						{ title: 'Готово', order: orderCol3 }
+						{
+							title: 'К исполнению',
+							order: orderCol1,
+							isDoneColumn: false
+						},
+						{
+							title: 'В работе',
+							order: orderCol2,
+							isDoneColumn: false
+						},
+						{
+							title: 'Готово',
+							order: orderCol3,
+							isDoneColumn: true
+						}
 					]
 				}
 			},

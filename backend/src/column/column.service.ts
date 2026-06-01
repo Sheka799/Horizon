@@ -3,6 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateColumnDto } from './dto/create-column.dto'
 import { generateKeyBetween } from 'fractional-indexing'
 import { UpdateColumnDto } from './dto/update-column.dto'
+import { TaskStatus } from '@prisma/generated/prisma/enums'
 
 @Injectable()
 export class ColumnService {
@@ -70,7 +71,8 @@ export class ColumnService {
 			data: {
 				title: dto.title,
 				boardId: dto.boardId,
-				order
+				order,
+				isDoneColumn: dto.isDoneColumn ?? false
 			}
 		})
 	}
@@ -98,10 +100,31 @@ export class ColumnService {
 			)
 		}
 
+		// ЕСЛИ МЕНЯЕТСЯ ТИП КОЛОНКИ НА DONE - НУЖНО ОБНОВИТЬ СТАТУСЫ ЗАДАЧ
+		if (
+			dto.isDoneColumn !== undefined &&
+			dto.isDoneColumn !== column.isDoneColumn
+		) {
+			const newStatus = dto.isDoneColumn
+				? TaskStatus.DONE
+				: TaskStatus.ACTIVE
+
+			await prisma.task.updateMany({
+				where: { columnId: column.id },
+				data: {
+					status: newStatus,
+					completedAt: dto.isDoneColumn ? new Date() : null
+				}
+			})
+		}
+
 		return prisma.column.update({
 			where: { id: column.id },
 			data: {
 				...(dto.title && { title: dto.title }),
+				...(dto.isDoneColumn !== undefined && {
+					isDoneColumn: dto.isDoneColumn
+				}),
 				order: newOrder
 			}
 		})

@@ -5,6 +5,8 @@ import { MoreHorizontal, PencilIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
+import { IColumn } from '@/features/dashboard/types'
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -40,20 +42,14 @@ import {
 	TooltipTrigger
 } from '@/shared/components/ui'
 
-import {
-	useColumnQuery,
-	useDeleteColumnMutation,
-	useUpdateColumnMutation
-} from '../hooks'
+import { useDeleteColumnMutation, useUpdateColumnMutation } from '../hooks'
 import { ColumnSchema, TypeColumnSchema } from '../schemes'
 
-export function ColumnMenu({ id }: { id: string }) {
+export function ColumnMenu({ column }: { column: IColumn }) {
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 	const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
 	const { deleteColumn, isDeletingColumn } = useDeleteColumnMutation()
-
-	const { column } = useColumnQuery(id)
 	const form = useForm<TypeColumnSchema>({
 		resolver: zodResolver(ColumnSchema),
 		values: {
@@ -64,7 +60,7 @@ export function ColumnMenu({ id }: { id: string }) {
 
 	const { updateColumn, isUpdatingColumn } = useUpdateColumnMutation()
 	const onSubmit = (values: TypeColumnSchema) => {
-		updateColumn({ id, dto: values })
+		updateColumn({ id: column.id, dto: values })
 		setIsEditDialogOpen(false)
 	}
 
@@ -132,7 +128,7 @@ export function ColumnMenu({ id }: { id: string }) {
 						<AlertDialogCancel>Отмена</AlertDialogCancel>
 						<AlertDialogAction
 							disabled={isDeletingColumn}
-							onClick={() => deleteColumn(id)}
+							onClick={() => deleteColumn(column.id)}
 						>
 							Продолжить
 						</AlertDialogAction>

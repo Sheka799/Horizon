@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class UpdateColumnDto {
 	@IsString({ message: 'Название колонки должно быть строкой' })
@@ -13,4 +13,8 @@ export class UpdateColumnDto {
 	@IsString()
 	@IsOptional()
 	nextOrder?: string | null
+
+	@IsBoolean({ message: 'isDoneColumn должно быть булевым' })
+	@IsOptional()
+	isDoneColumn?: boolean
 }

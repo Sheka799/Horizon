@@ -6,7 +6,7 @@ import {
 	IsOptional,
 	IsString
 } from 'class-validator'
-import { Priority } from '@prisma/generated/prisma/enums'
+import { Priority, TaskStatus } from '@prisma/generated/prisma/enums'
 
 export class CreateTaskDto {
 	@IsString({ message: 'Название должно быть строкой' })
@@ -21,11 +21,15 @@ export class CreateTaskDto {
 	@IsOptional()
 	priority?: Priority
 
-	@IsBoolean({ message: 'isCompleted должно быть булевым' })
-	@IsOptional()
-	isCompleted?: boolean
-
 	@IsDateString({}, { message: 'Неверный формат даты' })
 	@IsOptional()
 	dueDate?: string
+
+	@IsEnum(TaskStatus, { message: 'Неверный статус' })
+	@IsOptional()
+	status?: TaskStatus
+
+	@IsBoolean({ message: 'isArchived должно быть булевым' })
+	@IsOptional()
+	isArchived?: boolean
 }

@@ -11,6 +11,7 @@ import { IColumn } from '@/features/dashboard/types'
 import { CreateTaskModal, Task } from '@/features/task/components'
 
 import { ColumnMenu } from './ColumnMenu'
+import { Check } from 'lucide-react'
 
 interface BoardColumnProps {
 	column: IColumn
@@ -55,6 +56,7 @@ export function Column({ column, overlay, onTaskClick }: BoardColumnProps) {
 			>
 				<div className='flex w-full items-center justify-between gap-2'>
 					<div className='flex items-center gap-2'>
+						{column.isDoneColumn ? <Check size={16} /> : ''}
 						<h3 className='text-sm font-medium'>{column.title}</h3>
 						{tasks.length > 0 && (
 							<span className='text-muted-foreground text-md'>
@@ -64,7 +66,7 @@ export function Column({ column, overlay, onTaskClick }: BoardColumnProps) {
 					</div>
 					<div className='align-center flex gap-1'>
 						<CreateTaskModal id={column.id} />
-						<ColumnMenu id={column.id} />
+						<ColumnMenu column={column} />
 					</div>
 				</div>
 			</div>

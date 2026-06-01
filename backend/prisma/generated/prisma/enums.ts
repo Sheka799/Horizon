@@ -42,3 +42,11 @@ export const Priority = {
 } as const
 
 export type Priority = (typeof Priority)[keyof typeof Priority]
+
+
+export const TaskStatus = {
+  ACTIVE: 'ACTIVE',
+  DONE: 'DONE'
+} as const
+
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]

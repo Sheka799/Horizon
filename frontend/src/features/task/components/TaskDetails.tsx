@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 import { useBoardQuery } from '@/features/dashboard/hooks'
 
@@ -19,7 +20,6 @@ import {
 import { useMoveTaskMutation, useTaskQuery } from '../hooks'
 
 import { TaskDetailsSkeleton } from './TaskDetailsSkeleton'
-import { toast } from 'sonner'
 
 const DATE_FORMAT = {
 	day: 'numeric' as const,
@@ -37,10 +37,6 @@ export function TaskDetails({ taskId }: { taskId: string }) {
 	const moveTaskMutation = useMoveTaskMutation(boardId)
 
 	const [isMoving, setIsMoving] = useState(false)
-
-	const currentColumn = board?.columns?.find(column =>
-		column.tasks?.some(t => t.id === taskId)
-	)
 
 	const handleMoveTask = async (newColumnId: string) => {
 		if (!task || !currentColumn) return
@@ -90,6 +86,10 @@ export function TaskDetails({ taskId }: { taskId: string }) {
 			</div>
 		)
 	}
+
+	const currentColumn = board?.columns?.find(
+		column => column.id === task.columnId
+	)
 
 	return (
 		<div className='space-y-6'>

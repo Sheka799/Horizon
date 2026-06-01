@@ -4,6 +4,11 @@ export enum EPriority {
 	High = 'HIGH'
 }
 
+export enum ETaskStatus {
+  Active = 'ACTIVE',
+  Done = 'DONE'
+}
+
 export interface ITask {
 	id: string
 	name: string
@@ -14,6 +19,10 @@ export interface ITask {
 	createdAt: string
 	updatedAt: string
 	columnId: string
+	status: ETaskStatus
+	isArchived: boolean
+	completedAt: string
+	archivedAt: string
 }
 
 export interface IColumn {
@@ -23,7 +32,8 @@ export interface IColumn {
 	tasks: ITask[]
 	createdAt: string
 	updatedAt: string
-	boardId: string
+	boardId: string,
+	isDoneColumn: boolean
 }
 
 export interface Board {
