@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 
-import { useBoardQuery } from '@/features/dashboard/hooks'
+import { useBoardQuery } from '@/features/board/hooks'
 
 import { ROUTES } from '../config'
 

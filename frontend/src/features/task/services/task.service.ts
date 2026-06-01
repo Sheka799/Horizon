@@ -1,4 +1,4 @@
-import { ITask } from '@/features/dashboard/types'
+import { ITask } from '@/features/board/types'
 
 import { axiosWithAuth } from '@/shared/api'
 

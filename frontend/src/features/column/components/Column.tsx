@@ -7,7 +7,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-import { IColumn } from '@/features/dashboard/types'
+import { IColumn } from '@/features/board/types'
 import { CreateTaskModal, Task } from '@/features/task/components'
 
 import { ColumnMenu } from './ColumnMenu'

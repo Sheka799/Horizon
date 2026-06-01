@@ -5,7 +5,7 @@ import { CalendarIcon, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { EPriority } from '@/features/dashboard/types'
+import { EPriority } from '@/features/board/types'
 
 import {
 	Button,

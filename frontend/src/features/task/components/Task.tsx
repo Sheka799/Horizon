@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useState } from 'react'
 
-import { ITask } from '@/features/dashboard/types'
+import { ITask } from '@/features/board/types'
 
 import { DueDateDisplay, PriorityWithTooltip } from '@/shared/components/ui'
 

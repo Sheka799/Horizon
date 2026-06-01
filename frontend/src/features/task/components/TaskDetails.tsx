@@ -4,8 +4,6 @@ import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-import { useBoardQuery } from '@/features/dashboard/hooks'
-
 import {
 	DueDateDisplay,
 	PriorityWithTooltip,
@@ -20,6 +18,7 @@ import {
 import { useMoveTaskMutation, useTaskQuery } from '../hooks'
 
 import { TaskDetailsSkeleton } from './TaskDetailsSkeleton'
+import { useBoardQuery } from '@/features/board/hooks'
 
 const DATE_FORMAT = {
 	day: 'numeric' as const,

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { generateKeyBetween } from 'fractional-indexing'
 
-import { Board } from '@/features/dashboard/types'
+import { Board } from '@/features/board/types'
 
 import { columnService } from '../services'
 

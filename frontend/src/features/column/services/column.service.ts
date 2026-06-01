@@ -1,4 +1,4 @@
-import { IColumn } from '@/features/dashboard/types'
+import { IColumn } from '@/features/board/types'
 
 import { axiosWithAuth } from '@/shared/api'
 

@@ -5,7 +5,7 @@ import { MoreHorizontal, PencilIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { IColumn } from '@/features/dashboard/types'
+import { IColumn } from '@/features/board/types'
 
 import {
 	AlertDialog,

@@ -1,6 +1,1 @@
-export * from './Settings'
-export * from './Boards'
-export * from './Board'
-export * from './BoardSkeleton'
-export * from './CreateBoardModal'
-export * from './BoardMenu'
+export * from './Dashboard'
