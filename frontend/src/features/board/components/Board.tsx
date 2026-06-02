@@ -12,10 +12,15 @@ import {
 	SortableContext,
 	horizontalListSortingStrategy
 } from '@dnd-kit/sortable'
+import { ArchiveIcon } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 
 import { Column, CreateColumnModal } from '@/features/column/components'
 import { Task, TaskSheet } from '@/features/task/components'
+
+import { Button } from '@/shared/components/ui'
+import { ROUTES } from '@/shared/config'
 
 import { useBoardQuery } from '../hooks'
 import { useBoardDnd } from '../hooks'
@@ -38,10 +43,18 @@ export function Board({ id }: { id: string }) {
 	)
 
 	if (isLoading) return <BoardSkeleton />
-	if (!board) return <div>Доска не найдена.</div>
+	if (!board) return <div>Доска не найдена</div>
 
 	return (
 		<>
+			<div className='mb-6'>
+				<Link href={`${ROUTES.DASHBOARD.BOARD}/${id}/archive`}>
+					<Button variant='outline' size='sm'>
+						<ArchiveIcon className='mr-2 h-4 w-4' />
+						Архив
+					</Button>
+				</Link>
+			</div>
 			<DndContext
 				sensors={sensors}
 				collisionDetection={closestCorners}

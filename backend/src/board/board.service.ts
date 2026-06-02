@@ -128,4 +128,50 @@ export class BoardService {
 			}
 		})
 	}
+
+	public async getArchivedTasks(
+		userId: string,
+		boardId: string,
+		page: number = 1,
+		limit: number = 10
+	) {
+		const board = await prisma.board.findFirst({
+			where: {
+				id: boardId,
+				userId
+			}
+		})
+
+		if (!board) {
+			throw new NotFoundException('Доска не найдена')
+		}
+
+		const skip = (page - 1) * limit
+
+		const [tasks, total] = await prisma.$transaction([
+			prisma.task.findMany({
+				where: {
+					column: { boardId },
+					isArchived: true
+				},
+				skip,
+				take: limit,
+				orderBy: { archivedAt: 'desc' }
+			}),
+			prisma.task.count({
+				where: {
+					column: { boardId },
+					isArchived: true
+				}
+			})
+		])
+
+		return {
+			tasks,
+			total,
+			page,
+			limit,
+			totalPages: Math.ceil(total / limit)
+		}
+	}
 }

@@ -18,9 +18,11 @@ const TITLES: Record<string, string> = {
 export function SiteHeader() {
 	const pathname = usePathname()
 
-	const boardId = pathname.startsWith(ROUTES.DASHBOARD.BOARD + '/')
-		? pathname.split('/').at(-1)
-		: undefined
+	let boardId: string | undefined
+	if (pathname.startsWith(ROUTES.DASHBOARD.BOARD + '/')) {
+		const segments = pathname.split('/')
+		boardId = segments[3]
+	}
 
 	const { board, isLoading } = useBoardQuery(boardId ?? '')
 

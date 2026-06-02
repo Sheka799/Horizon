@@ -7,7 +7,8 @@ import {
 	HttpStatus,
 	Param,
 	Patch,
-	Post
+	Post,
+	Query
 } from '@nestjs/common'
 import { BoardService } from './board.service'
 import { Authorization } from '@/auth/decorators/auth.decorator'
@@ -59,5 +60,25 @@ export class BoardController {
 	@Delete(':id')
 	async delete(@Authorized('id') userId: string, @Param('id') id: string) {
 		return this.boardService.delete(userId, id)
+	}
+
+	@Authorization()
+	@HttpCode(HttpStatus.OK)
+	@Get(':boardId/tasks/archived')
+	async getArchivedTasks(
+		@Authorized('id') userId: string,
+		@Param('boardId') boardId: string,
+		@Query('page') page?: string,
+		@Query('limit') limit?: string
+	) {
+		const pageNum = page ? parseInt(page) : 1
+		const limitNum = limit ? parseInt(limit) : 10
+
+		return this.boardService.getArchivedTasks(
+			userId,
+			boardId,
+			pageNum,
+			limitNum
+		)
 	}
 }

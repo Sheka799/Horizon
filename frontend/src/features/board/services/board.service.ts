@@ -1,7 +1,15 @@
 import { axiosWithAuth } from '@/shared/api'
 
 import { TypeBoardSchema } from '../schemes'
-import { Board } from '../types'
+import { Board, ITask } from '../types'
+
+export interface ArchivedTasksResponse {
+	tasks: ITask[]
+	total: number
+	page: number
+	limit: number
+	totalPages: number
+}
 
 class BoardService {
 	public async findAll() {
@@ -27,10 +35,7 @@ class BoardService {
 	}
 
 	public async delete(id: string) {
-		const response = (await axiosWithAuth.delete(
-			`boards/${id}`
-		)) as unknown as void
-		return response
+		await axiosWithAuth.delete(`boards/${id}`)
 	}
 
 	public async update(id: string, dto: TypeBoardSchema) {
@@ -38,6 +43,17 @@ class BoardService {
 			`boards/${id}`,
 			dto
 		)) as unknown as Board
+		return response
+	}
+
+	public async getArchivedTasks(
+		boardId: string,
+		page: number = 1,
+		limit: number = 10
+	): Promise<ArchivedTasksResponse> {
+		const response = (await axiosWithAuth.get(
+			`boards/${boardId}/tasks/archived?page=${page}&limit=${limit}`
+		)) as unknown as ArchivedTasksResponse
 		return response
 	}
 }
