@@ -14,6 +14,7 @@ export function useDeleteTaskMutation() {
 		},
 		onSuccess() {
 			queryClient.invalidateQueries({ queryKey: ['board'] })
+			queryClient.invalidateQueries({ queryKey: ['archived-tasks'] })
 			toast.success('Задача успешно удалена')
 		},
 		onError(error) {

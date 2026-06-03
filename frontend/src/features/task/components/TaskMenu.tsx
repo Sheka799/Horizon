@@ -74,7 +74,7 @@ export function TaskMenu({ id, onDialogOpenChange }: TaskMenuProps) {
 							onSelect={() => handleArchiveOpenChange(true)}
 						>
 							<ArchiveIcon />
-							Архив
+							Архивировать
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 					<DropdownMenuSeparator />
@@ -86,7 +86,7 @@ export function TaskMenu({ id, onDialogOpenChange }: TaskMenuProps) {
 							}}
 						>
 							<TrashIcon />
-							Удалить
+							Удалить навсегда
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 				</DropdownMenuContent>
