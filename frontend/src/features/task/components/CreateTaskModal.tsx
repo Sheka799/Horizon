@@ -40,31 +40,26 @@ import {
 } from '@/shared/components/ui'
 
 import { useCreateTaskMutation } from '../hooks'
-import { TaskSchema, TypeTaskSchema } from '../schemes'
+import { CreateTaskSchema, TypeCreateTaskSchema } from '../schemes'
 
 export function CreateTaskModal({ id }: { id: string }) {
 	const [isOpen, setIsOpen] = useState(false)
 
-	const form = useForm<TypeTaskSchema>({
-		resolver: zodResolver(TaskSchema),
+	const form = useForm<TypeCreateTaskSchema>({
+		resolver: zodResolver(CreateTaskSchema),
 		defaultValues: {
 			name: '',
 			columnId: id,
-			priority: '',
 			dueDate: undefined
 		}
 	})
 
 	const { createTask, isCreatingTask } = useCreateTaskMutation()
 
-	const onSubmit = (values: TypeTaskSchema) => {
+	const onSubmit = (values: TypeCreateTaskSchema) => {
 		createTask({
-			name: values.name,
-			columnId: values.columnId,
-			priority: values.priority
-				? (values.priority as EPriority)
-				: EPriority.Medium,
-			dueDate: values.dueDate
+			...values,
+			priority: values.priority ?? EPriority.Medium
 		})
 		form.reset()
 		setIsOpen(false)

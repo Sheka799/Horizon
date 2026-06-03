@@ -99,7 +99,7 @@ export function SettingsForm() {
 											</FormLabel>
 											<FormDescription>
 												Включите двухфакторную
-												футентификацию для вашей учетной
+												аутентификацию для вашей учетной
 												записи
 											</FormDescription>
 										</div>

@@ -13,7 +13,6 @@ export interface ITask {
 	id: string
 	name: string
 	priority: EPriority | null
-	isCompleted: boolean
 	dueDate: string | null
 	order: string
 	createdAt: string

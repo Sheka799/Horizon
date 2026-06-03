@@ -43,7 +43,7 @@ export function CreateBoardModal() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button className='hover:bg-primary/90 hover:text-primary-foreground mb-5 duration-200 ease-linear'>
+				<Button className='hover:bg-primary/90 hover:text-primary-foreground mb-5 duration-200 ease-linear w-max'>
 					Создать доску
 				</Button>
 			</DialogTrigger>

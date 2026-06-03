@@ -1,41 +1,50 @@
 'use client'
 
-import { MoreHorizontal, TrashIcon } from 'lucide-react'
+import { ArchiveIcon, MoreHorizontal, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
 
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
 	Button,
+	ConfirmDialog,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger
 } from '@/shared/components/ui'
 
-import { useDeleteTaskMutation } from '../hooks'
+import { useDeleteTaskMutation, useUpdateTaskMutation } from '../hooks'
 
 interface TaskMenuProps {
 	id: string
-	isDeleteDialogOpen: boolean
-	onOpenChange: (open: boolean) => void
+	onDialogOpenChange: (open: boolean) => void
 }
 
-export function TaskMenu({
-	id,
-	isDeleteDialogOpen,
-	onOpenChange
-}: TaskMenuProps) {
+export function TaskMenu({ id, onDialogOpenChange }: TaskMenuProps) {
+	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+	const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false)
+
 	const { deleteTask, isDeletingTask } = useDeleteTaskMutation()
+	const { updateTask, isUpdatingTask } = useUpdateTaskMutation()
+
+	const handleDeleteOpenChange = (open: boolean) => {
+		setIsDeleteDialogOpen(open)
+		onDialogOpenChange(open)
+	}
+
+	const handleArchiveOpenChange = (open: boolean) => {
+		setIsArchiveDialogOpen(open)
+		onDialogOpenChange(open)
+	}
+
+	const handleArchive = () => {
+		updateTask({ id, dto: { isArchived: true } })
+		handleArchiveOpenChange(false)
+	}
 
 	return (
 		<>
@@ -62,9 +71,18 @@ export function TaskMenu({
 				<DropdownMenuContent>
 					<DropdownMenuGroup>
 						<DropdownMenuItem
+							onSelect={() => handleArchiveOpenChange(true)}
+						>
+							<ArchiveIcon />
+							Архив
+						</DropdownMenuItem>
+					</DropdownMenuGroup>
+					<DropdownMenuSeparator />
+					<DropdownMenuGroup>
+						<DropdownMenuItem
 							variant='destructive'
 							onSelect={() => {
-								onOpenChange(true)
+								handleDeleteOpenChange(true)
 							}}
 						>
 							<TrashIcon />
@@ -74,24 +92,22 @@ export function TaskMenu({
 				</DropdownMenuContent>
 			</DropdownMenu>
 
-			<AlertDialog open={isDeleteDialogOpen} onOpenChange={onOpenChange}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>
-							Вы уверены, что хотите удалить эту задачу?
-						</AlertDialogTitle>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Отмена</AlertDialogCancel>
-						<AlertDialogAction
-							disabled={isDeletingTask}
-							onClick={() => deleteTask(id)}
-						>
-							Продолжить
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
+			<ConfirmDialog
+				open={isDeleteDialogOpen}
+				onOpenChange={handleDeleteOpenChange}
+				title='Вы уверены, что хотите удалить эту задачу?'
+				disabled={isDeletingTask}
+				onConfirm={() => deleteTask(id)}
+			/>
+
+			<ConfirmDialog
+				open={isArchiveDialogOpen}
+				onOpenChange={handleArchiveOpenChange}
+				title='Переместить задачу в архив?'
+				confirmText='Архивировать'
+				disabled={isUpdatingTask}
+				onConfirm={handleArchive}
+			/>
 		</>
 	)
 }

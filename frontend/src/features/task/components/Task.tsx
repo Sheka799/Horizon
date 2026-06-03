@@ -29,7 +29,7 @@ export function Task({ task, overlay, onTaskClick }: TaskCardProps) {
 		data: { type: 'task', task }
 	})
 
-	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+	const [hasOpenDialog, setHasOpenDialog] = useState(false)
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
@@ -37,7 +37,7 @@ export function Task({ task, overlay, onTaskClick }: TaskCardProps) {
 	}
 
 	const handleCardClick = (e: React.MouseEvent) => {
-		if (isDeleteDialogOpen) return
+		if (hasOpenDialog) return
 
 		const target = e.target as HTMLElement
 
@@ -63,11 +63,7 @@ export function Task({ task, overlay, onTaskClick }: TaskCardProps) {
 				{task.priority && (
 					<PriorityWithTooltip priority={task.priority} />
 				)}
-				<TaskMenu
-					id={task.id}
-					isDeleteDialogOpen={isDeleteDialogOpen}
-					onOpenChange={setIsDeleteDialogOpen}
-				/>
+				<TaskMenu id={task.id} onDialogOpenChange={setHasOpenDialog} />
 			</div>
 			<p className='text-sm font-medium'>{task.name}</p>
 			<div className='mt-2 text-xs'>

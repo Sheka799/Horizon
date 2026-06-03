@@ -89,7 +89,7 @@ export function Archive({ boardId }: { boardId: string }) {
 						<Table>
 							<TableHeader>
 								<TableRow>
-									<TableHead>Название задачи</TableHead>
+									<TableHead className='w-[300px]'>Название задачи</TableHead>
 									<TableHead>Статус</TableHead>
 									<TableHead>Дата архивации</TableHead>
 									<TableHead className='text-right'>
@@ -100,7 +100,7 @@ export function Archive({ boardId }: { boardId: string }) {
 							<TableBody>
 								{tasks?.map(task => (
 									<TableRow key={task.id}>
-										<TableCell className='font-medium'>
+										<TableCell className='font-medium whitespace-normal break-words'>
 											{task.name}
 										</TableCell>
 										<TableCell>

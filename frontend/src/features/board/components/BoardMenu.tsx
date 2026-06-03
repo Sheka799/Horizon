@@ -6,15 +6,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
 	Button,
+	ConfirmDialog,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -99,31 +92,14 @@ export function BoardMenu({ id }: { id: string }) {
 				</DropdownMenuContent>
 			</DropdownMenu>
 
-			<AlertDialog
+			<ConfirmDialog
 				open={isDeleteDialogOpen}
 				onOpenChange={setIsDeleteDialogOpen}
-			>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>
-							Вы уверены, что хотите удалить эту доску?
-						</AlertDialogTitle>
-						<AlertDialogDescription>
-							Если вы удалите эту доску, все ее данные будут
-							безвозвратно удалены
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Отмена</AlertDialogCancel>
-						<AlertDialogAction
-							disabled={isDeletingBoard}
-							onClick={() => deleteBoard(id)}
-						>
-							Продолжить
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
+				title='Вы уверены, что хотите удалить эту доску?'
+				description='Если вы удалите эту доску, все ее данные будут безвозвратно удалены'
+				disabled={isDeletingBoard}
+				onConfirm={() => deleteBoard(id)}
+			/>
 
 			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
 				<DialogContent className='sm:max-w-sm'>

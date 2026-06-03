@@ -8,15 +8,8 @@ import { useForm } from 'react-hook-form'
 import { IColumn } from '@/features/board/types'
 
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
 	Button,
+	ConfirmDialog,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -110,31 +103,14 @@ export function ColumnMenu({ column }: { column: IColumn }) {
 				</DropdownMenuContent>
 			</DropdownMenu>
 
-			<AlertDialog
+			<ConfirmDialog
 				open={isDeleteDialogOpen}
 				onOpenChange={setIsDeleteDialogOpen}
-			>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>
-							Вы уверены, что хотите удалить эту колонку?
-						</AlertDialogTitle>
-						<AlertDialogDescription>
-							Если вы удалите эту колонку, все ее данные будут
-							безвозвратно удалены
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel>Отмена</AlertDialogCancel>
-						<AlertDialogAction
-							disabled={isDeletingColumn}
-							onClick={() => deleteColumn(column.id)}
-						>
-							Продолжить
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
+				title='Вы уверены, что хотите удалить эту колонку?'
+				description='Если вы удалите эту колонку, все ее данные будут безвозвратно удалены'
+				disabled={isDeletingColumn}
+				onConfirm={() => deleteColumn(column.id)}
+			/>
 
 			<Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
 				<DialogContent className='sm:max-w-sm'>
