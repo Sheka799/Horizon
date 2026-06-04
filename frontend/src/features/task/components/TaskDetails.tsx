@@ -4,9 +4,9 @@ import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import { useBoardQuery } from '@/features/board/hooks'
+
 import {
-	DueDateDisplay,
-	PriorityWithTooltip,
 	Select,
 	SelectContent,
 	SelectGroup,
@@ -18,7 +18,8 @@ import {
 import { useMoveTaskMutation, useTaskQuery } from '../hooks'
 
 import { TaskDetailsSkeleton } from './TaskDetailsSkeleton'
-import { useBoardQuery } from '@/features/board/hooks'
+import { TaskPriorityInline } from './TaskPriorityInline'
+import { TaskDueDateInline } from './TaskDueDateInline'
 
 const DATE_FORMAT = {
 	day: 'numeric' as const,
@@ -54,8 +55,6 @@ export function TaskDetails({ taskId }: { taskId: string }) {
 			}
 
 			const tasks = targetColumn.tasks || []
-
-			// Определяем порядок для вставки в конец колонки
 			const lastTask = tasks[tasks.length - 1]
 			const prevOrder = lastTask?.order ?? null
 			const nextOrder = null
@@ -140,26 +139,13 @@ export function TaskDetails({ taskId }: { taskId: string }) {
 				{/* Приоритет */}
 				<li className='grid grid-cols-[120px_1fr] items-center gap-1'>
 					<h4 className='text-sm font-semibold'>Приоритет</h4>
-					{task.priority ? (
-						<PriorityWithTooltip
-							priority={task.priority}
-							showLabel={true}
-						/>
-					) : (
-						<span className='text-muted-foreground'>—</span>
-					)}
+					<TaskPriorityInline task={task} />
 				</li>
 
 				{/* Дедлайн */}
 				<li className='grid grid-cols-[120px_1fr] items-center gap-1'>
 					<h4 className='text-sm font-semibold'>Дедлайн</h4>
-					<p className='text-muted-foreground text-sm'>
-						{task.dueDate ? (
-							<DueDateDisplay dueDate={task.dueDate} />
-						) : (
-							'—'
-						)}
-					</p>
+					<TaskDueDateInline task={task} />
 				</li>
 			</ul>
 		</div>

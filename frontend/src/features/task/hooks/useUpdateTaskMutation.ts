@@ -14,7 +14,8 @@ export function useUpdateTaskMutation() {
 			const response = await taskService.update(data.id, data.dto)
 			return response
 		},
-		onSuccess: () => {
+		onSuccess: updatedTask => {
+			queryClient.setQueryData(['task', updatedTask.id], updatedTask)
 			queryClient.invalidateQueries({ queryKey: ['board'] })
 			queryClient.invalidateQueries({ queryKey: ['archived-tasks'] })
 			toast.success('Задача успешно обновлена')

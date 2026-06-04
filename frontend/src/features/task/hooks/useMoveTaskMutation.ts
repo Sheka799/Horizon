@@ -67,8 +67,9 @@ export function useMoveTaskMutation(boardId: string) {
 			queryClient.setQueryData(['board', boardId], ctx?.previous)
 		},
 
-		onSettled: () => {
+		onSettled: (_, __, variables) => {
 			queryClient.invalidateQueries({ queryKey: ['board', boardId] })
+			queryClient.invalidateQueries({ queryKey: ['task', variables.id] })
 		}
 	})
 }
