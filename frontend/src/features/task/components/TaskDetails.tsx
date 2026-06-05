@@ -18,8 +18,9 @@ import {
 import { useMoveTaskMutation, useTaskQuery } from '../hooks'
 
 import { TaskDetailsSkeleton } from './TaskDetailsSkeleton'
-import { TaskPriorityInline } from './TaskPriorityInline'
 import { TaskDueDateInline } from './TaskDueDateInline'
+import { TaskNameInline } from './TaskNameInline'
+import { TaskPriorityInline } from './TaskPriorityInline'
 
 const DATE_FORMAT = {
 	day: 'numeric' as const,
@@ -106,7 +107,11 @@ export function TaskDetails({ taskId }: { taskId: string }) {
 				</p>
 			</div>
 
-			<h3 className='text-lg font-bold'>{task.name}</h3>
+			<TaskNameInline
+				taskId={task.id}
+				value={task.name}
+				className='text-lg font-bold'
+			/>
 			<hr />
 
 			<ul className='flex flex-col gap-5'>

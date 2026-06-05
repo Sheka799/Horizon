@@ -32,11 +32,7 @@ export function TaskDueDateInline({ task }: { task: ITask }) {
 					variant='ghost'
 					className='h-auto !w-fit px-2 py-1 text-left font-normal'
 				>
-					{task.dueDate ? (
-						<DueDateDisplay dueDate={task.dueDate} />
-					) : (
-						<span className='text-muted-foreground'>—</span>
-					)}
+					<DueDateDisplay task={task} />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className='w-auto p-0' align='start'>

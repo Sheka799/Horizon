@@ -67,7 +67,7 @@ export function Task({ task, overlay, onTaskClick }: TaskCardProps) {
 			</div>
 			<p className='text-sm font-medium'>{task.name}</p>
 			<div className='mt-2 text-xs'>
-				{task.dueDate && <DueDateDisplay dueDate={task.dueDate} />}
+				<DueDateDisplay task={task} />
 			</div>
 		</div>
 	)

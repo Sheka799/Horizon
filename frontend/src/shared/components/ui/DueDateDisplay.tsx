@@ -1,12 +1,18 @@
 import { Flame } from 'lucide-react'
 
+import { ETaskStatus, ITask } from '@/features/board/types'
+
 import { isOverdueOrToday } from '@/shared/utils'
 
-export function DueDateDisplay({ dueDate }: { dueDate: string }) {
-	const isOverdue = isOverdueOrToday(dueDate)
-	const dateText = new Date(dueDate).toLocaleDateString('ru-RU')
+export function DueDateDisplay({ task }: { task: ITask }) {
+	if (!task.dueDate) {
+		return <span className='text-muted-foreground'>—</span>
+	}
 
-	if (!isOverdue) {
+	const isOverdue = isOverdueOrToday(task.dueDate)
+	const dateText = new Date(task.dueDate).toLocaleDateString('ru-RU')
+
+	if (!isOverdue || task.status === ETaskStatus.Done) {
 		return <span className='text-muted-foreground'>{dateText}</span>
 	}
 
