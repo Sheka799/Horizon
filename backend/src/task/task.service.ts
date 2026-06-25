@@ -1,12 +1,24 @@
 import { prisma } from '@/libs/prisma'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { generateKeyBetween } from 'fractional-indexing'
 import { UpdateTaskDto } from './dto/update.task.dto'
 import { TaskStatus } from '@prisma/generated/prisma/enums'
+import { TaskAttachmentService } from '@/task-attachment/task-attachment.service'
+import { ConfigService } from '@nestjs/config'
+import { validateTaskDescription } from './utils/validate-task-description.util'
 
 @Injectable()
 export class TaskService {
+	public constructor(
+		private readonly taskAttachmentService: TaskAttachmentService,
+		private readonly configService: ConfigService
+	) {}
+
 	public async getById(userId: string, id: string) {
 		const task = await prisma.task.findFirst({
 			where: {
@@ -16,6 +28,9 @@ export class TaskService {
 						userId
 					}
 				}
+			},
+			include: {
+				attachments: true
 			}
 		})
 
@@ -41,6 +56,8 @@ export class TaskService {
 		if (!task) {
 			throw new NotFoundException('Задача не найдена')
 		}
+
+		await this.taskAttachmentService.removeAllForTask(id)
 
 		return prisma.task.delete({
 			where: { id }
@@ -123,7 +140,6 @@ export class TaskService {
 			completedAt = targetColumn.isDoneColumn ? new Date() : null
 		}
 
-		// Архивация
 		let isArchived = task.isArchived
 		let archivedAt = task.archivedAt
 
@@ -135,6 +151,8 @@ export class TaskService {
 			archivedAt = dto.isArchived ? new Date() : null
 		}
 
+		const description = this.resolveDescription(task, dto)
+
 		return prisma.task.update({
 			where: { id },
 			data: {
@@ -144,6 +162,7 @@ export class TaskService {
 				...(dto.dueDate !== undefined && {
 					dueDate: dto.dueDate ? new Date(dto.dueDate) : null
 				}),
+				description: description as any,
 				order:
 					dto.prevOrder !== undefined || dto.nextOrder !== undefined
 						? generateKeyBetween(
@@ -157,5 +176,29 @@ export class TaskService {
 				archivedAt
 			}
 		})
+	}
+
+	private resolveDescription(
+		task: { description: unknown },
+		dto: UpdateTaskDto
+	): unknown {
+		if (dto.description === undefined) {
+			return task.description
+		}
+
+		if (dto.description === null) {
+			return null
+		}
+
+		try {
+			return validateTaskDescription(
+				dto.description,
+				this.configService.getOrThrow<string>('S3_URL')
+			)
+		} catch (error) {
+			const message =
+				error instanceof Error ? error.message : 'Некорректное описание'
+			throw new BadRequestException(message)
+		}
 	}
 }

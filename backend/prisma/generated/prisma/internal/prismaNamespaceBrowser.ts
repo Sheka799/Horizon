@@ -56,7 +56,8 @@ export const ModelName = {
   Token: 'Token',
   Board: 'Board',
   Column: 'Column',
-  Task: 'Task'
+  Task: 'Task',
+  TaskAttachment: 'TaskAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -146,6 +147,7 @@ export type ColumnScalarFieldEnum = (typeof ColumnScalarFieldEnum)[keyof typeof 
 export const TaskScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  description: 'description',
   priority: 'priority',
   dueDate: 'dueDate',
   order: 'order',
@@ -161,12 +163,34 @@ export const TaskScalarFieldEnum = {
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
 
 
+export const TaskAttachmentScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  url: 'url',
+  name: 'name',
+  mimetype: 'mimetype',
+  size: 'size',
+  createdAt: 'createdAt',
+  taskId: 'taskId'
+} as const
+
+export type TaskAttachmentScalarFieldEnum = (typeof TaskAttachmentScalarFieldEnum)[keyof typeof TaskAttachmentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -183,4 +207,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

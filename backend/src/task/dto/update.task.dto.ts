@@ -2,6 +2,7 @@ import {
 	IsBoolean,
 	IsDateString,
 	IsEnum,
+	IsObject,
 	IsOptional,
 	IsString
 } from 'class-validator'
@@ -37,4 +38,8 @@ export class UpdateTaskDto {
 	@IsBoolean({ message: 'isArchived должно быть булевым' })
 	@IsOptional()
 	isArchived?: boolean
+
+	@IsObject({ message: 'Описание задачи должно быть объектом' })
+	@IsOptional()
+	description?: Record<string, unknown> | null
 }

@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module'
 import { BoardModule } from './board/board.module';
 import { ColumnModule } from './column/column.module';
 import { TaskModule } from './task/task.module';
+import { StorageModule } from './libs/storage/storage.module';
+import { TaskAttachmentModule } from './task-attachment/task-attachment.module';
 
 @Module({
 	imports: [
@@ -15,9 +17,11 @@ import { TaskModule } from './task/task.module';
 		}),
 		AuthModule,
 		MailModule,
+		StorageModule,
 		BoardModule,
 		ColumnModule,
-		TaskModule
+		TaskModule,
+		TaskAttachmentModule
 	]
 })
 export class AppModule {}

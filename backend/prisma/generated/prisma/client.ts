@@ -69,3 +69,8 @@ export type Column = Prisma.ColumnModel
  * 
  */
 export type Task = Prisma.TaskModel
+/**
+ * Model TaskAttachment
+ * 
+ */
+export type TaskAttachment = Prisma.TaskAttachmentModel

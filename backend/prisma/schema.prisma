@@ -101,6 +101,7 @@ model Task {
   id String @id @default(uuid())
 
   name        String
+  description Json?
   priority    Priority?
   dueDate     DateTime? @map("due_date")
   order       String    @default("a0")
@@ -116,9 +117,29 @@ model Task {
   column   Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId String @map("column_id")
 
+  attachments TaskAttachment[]
+
   @@index([isArchived])
   @@index([status])
   @@map("tasks")
+}
+
+model TaskAttachment {
+  id String @id @default(uuid())
+
+  key      String @unique
+  url      String
+  name     String
+  mimetype String
+  size     Int
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId String @map("task_id")
+
+  @@index([taskId])
+  @@map("task_attachments")
 }
 
 enum UserRole {
