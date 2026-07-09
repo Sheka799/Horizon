@@ -21,6 +21,7 @@ import { TaskDetailsSkeleton } from './TaskDetailsSkeleton'
 import { TaskDueDateInline } from './TaskDueDateInline'
 import { TaskNameInline } from './TaskNameInline'
 import { TaskPriorityInline } from './TaskPriorityInline'
+import { TaskDescriptionInline } from './TaskDescriptionInline'
 
 const DATE_FORMAT = {
 	day: 'numeric' as const,
@@ -112,6 +113,12 @@ export function TaskDetails({ taskId }: { taskId: string }) {
 				value={task.name}
 				className='text-lg font-bold'
 			/>
+			<hr />
+
+			<div>
+				<h4 className='mb-2 text-lg font-semibold'>Описание</h4>
+				<TaskDescriptionInline task={task} />
+			</div>
 			<hr />
 
 			<ul className='flex flex-col gap-5'>

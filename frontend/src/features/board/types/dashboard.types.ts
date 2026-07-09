@@ -5,13 +5,22 @@ export enum EPriority {
 }
 
 export enum ETaskStatus {
-  Active = 'ACTIVE',
-  Done = 'DONE'
+	Active = 'ACTIVE',
+	Done = 'DONE'
+}
+
+export interface IAttachment {
+	id: string
+	url: string
+	name: string
+	mimetype: string
+	size: number
 }
 
 export interface ITask {
 	id: string
 	name: string
+	description: unknown
 	priority: EPriority | null
 	dueDate: string | null
 	order: string
@@ -22,6 +31,7 @@ export interface ITask {
 	isArchived: boolean
 	completedAt: string
 	archivedAt: string
+	attachments?: IAttachment[]
 }
 
 export interface IColumn {
@@ -31,7 +41,7 @@ export interface IColumn {
 	tasks: ITask[]
 	createdAt: string
 	updatedAt: string
-	boardId: string,
+	boardId: string
 	isDoneColumn: boolean
 }
 

@@ -21,7 +21,8 @@ export const UpdateTaskSchema = z.object({
 	status: z.string().optional(),
 	isArchived: z.boolean().optional(),
 	prevOrder: z.string().nullable().optional(),
-	nextOrder: z.string().nullable().optional()
+	nextOrder: z.string().nullable().optional(),
+	description: z.unknown().nullable().optional()
 })
 
 export type TypeUpdateTaskSchema = z.infer<typeof UpdateTaskSchema>

@@ -70,7 +70,7 @@ export class TaskAttachmentService {
 				taskId,
 				key,
 				url,
-				name: file.originalname,
+				name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
 				mimetype: file.mimetype,
 				size: file.size
 			}
