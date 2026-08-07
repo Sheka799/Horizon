@@ -18,10 +18,17 @@ import {
 	useUploadAttachmentMutation
 } from '../hooks'
 import { useUpdateTaskMutation } from '../hooks'
+import {
+	insertUploadingNode,
+	removeUploadingNode,
+	replaceUploadingNode,
+	updateUploadingProgress
+} from '../utils'
 
 import { FileAttachment } from './FileAttachment'
 import { TaskDescriptionToolbar } from './TaskDescriptionToolbar'
 import { TaskDescriptionView } from './TaskDescriptionView'
+import { UploadingFile } from './UploadingFile'
 
 const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = [
@@ -40,16 +47,12 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 
 	const imageInputRef = useRef<HTMLInputElement>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
+	const uploadedDuringSessionRef = useRef<Set<string>>(new Set())
 
 	const { updateTask, isUpdatingTask } = useUpdateTaskMutation()
 	const { uploadAttachment, isUploadingAttachment } =
 		useUploadAttachmentMutation(task.id)
 	const { deleteAttachment } = useDeleteAttachmentMutation(task.id)
-
-	// Список id вложений, которые были загружены, но потом удалены из текста
-	// до сохранения — их нужно подчистить в S3 при отмене/сохранении,
-	// чтобы не оставались "осиротевшие" файлы.
-	const uploadedDuringSessionRef = useRef<Set<string>>(new Set())
 
 	const editor = useEditor({
 		extensions: [
@@ -57,6 +60,7 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 			Link.configure({ openOnClick: false }),
 			Image,
 			FileAttachment,
+			UploadingFile,
 			Placeholder.configure({
 				placeholder: 'Добавьте описание задачи...'
 			})
@@ -73,13 +77,10 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 	}
 
 	const handleCancel = () => {
-		// Откатываем редактор к тому, что было сохранено в задаче
 		editor?.commands.setContent((task.description as JSONContent) ?? '')
 		editor?.setEditable(false)
 		setIsEditing(false)
 
-		// Если за время редактирования юзер успел залить файлы, но передумал
-		// сохранять — удаляем их, чтобы не копился мусор в S3 и в базе.
 		uploadedDuringSessionRef.current.forEach(attachmentId => {
 			deleteAttachment(attachmentId)
 		})
@@ -117,15 +118,31 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 			return
 		}
 
-		const attachment = await uploadAttachment(file).catch(() => null)
-		if (!attachment) return
+		// Генерируем уникальный id для этой конкретной загрузки
+		const uploadId = crypto.randomUUID()
+
+		// Сразу вставляем placeholder с прогресс-баром в редактор
+		insertUploadingNode(editor, uploadId, file.name, true)
+
+		const attachment = await uploadAttachment({
+			file,
+			onProgress: percent => {
+				updateUploadingProgress(editor, uploadId, percent)
+			}
+		}).catch(() => null)
+
+		if (!attachment) {
+			removeUploadingNode(editor, uploadId)
+			return
+		}
 
 		uploadedDuringSessionRef.current.add(attachment.id)
-		editor
-			.chain()
-			.focus()
-			.setImage({ src: attachment.url, alt: attachment.name })
-			.run()
+
+		// Заменяем placeholder на реальную image-ноду
+		replaceUploadingNode(editor, uploadId, {
+			type: 'image',
+			attrs: { src: attachment.url, alt: attachment.name }
+		})
 	}
 
 	const handleFilePick = async (
@@ -140,25 +157,38 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 			return
 		}
 
-		const attachment = await uploadAttachment(file).catch(() => null)
-		if (!attachment) return
+		const uploadId = crypto.randomUUID()
+
+		insertUploadingNode(editor, uploadId, file.name, false)
+
+		const attachment = await uploadAttachment({
+			file,
+			onProgress: percent => {
+				updateUploadingProgress(editor, uploadId, percent)
+			}
+		}).catch(() => null)
+
+		if (!attachment) {
+			removeUploadingNode(editor, uploadId)
+			return
+		}
 
 		uploadedDuringSessionRef.current.add(attachment.id)
-		editor
-			.chain()
-			.focus()
-			.insertFileAttachment({
+
+		// Заменяем placeholder на реальную file-ноду
+		replaceUploadingNode(editor, uploadId, {
+			type: 'file',
+			attrs: {
 				url: attachment.url,
 				name: attachment.name,
 				mimetype: attachment.mimetype,
 				size: attachment.size
-			})
-			.run()
+			}
+		})
 	}
 
 	if (!editor) return null
 
-	// РЕЖИМ ПРОСМОТРА
 	if (!isEditing) {
 		return (
 			<div className='group relative'>
@@ -176,7 +206,6 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 		)
 	}
 
-	// РЕЖИМ РЕДАКТИРОВАНИЯ
 	return (
 		<div>
 			<TaskDescriptionToolbar

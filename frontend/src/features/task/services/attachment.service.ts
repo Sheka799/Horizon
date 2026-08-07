@@ -3,7 +3,11 @@ import { IAttachment } from '@/features/board/types'
 import { axiosWithAuth } from '@/shared/api'
 
 class AttachmentService {
-	public async upload(taskId: string, file: File) {
+	public async upload(
+		taskId: string,
+		file: File,
+		onProgress?: (percent: number) => void
+	) {
 		const formData = new FormData()
 		formData.append('file', file)
 
@@ -11,7 +15,14 @@ class AttachmentService {
 			`tasks/${taskId}/attachments`,
 			formData,
 			{
-				headers: { 'Content-Type': 'multipart/form-data' }
+				headers: { 'Content-Type': 'multipart/form-data' },
+				onUploadProgress: event => {
+					if (!onProgress || !event.total) return
+					const percent = Math.round(
+						(event.loaded * 100) / event.total
+					)
+					onProgress(percent)
+				}
 			}
 		)) as unknown as IAttachment
 

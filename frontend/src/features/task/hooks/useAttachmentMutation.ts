@@ -11,7 +11,13 @@ export function useUploadAttachmentMutation(taskId: string) {
 	const { mutateAsync: uploadAttachment, isPending: isUploadingAttachment } =
 		useMutation({
 			mutationKey: ['upload attachment', taskId],
-			mutationFn: (file: File) => attachmentService.upload(taskId, file),
+			mutationFn: ({
+				file,
+				onProgress
+			}: {
+				file: File
+				onProgress?: (percent: number) => void
+			}) => attachmentService.upload(taskId, file, onProgress),
 			onSuccess() {
 				queryClient.invalidateQueries({ queryKey: ['task', taskId] })
 			},
