@@ -2,7 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { FaGoogle, FaYandex } from 'react-icons/fa'
+import { FaYandex } from 'react-icons/fa'
 
 import { Button } from '@/shared/components/ui'
 
@@ -27,17 +27,17 @@ export function AuthSocial() {
 
 	return (
 		<>
-			<div className='grid grid-cols-2 gap-6'>
-				<Button onClick={() => onClick('google')} variant='outline'>
+			<div className='flex justify-center mb-4'>
+				{/* <Button onClick={() => onClick('google')} variant='outline'>
 					<FaGoogle className='mr-2 size-4' />
 					Google
-				</Button>
+				</Button> */}
 				<Button onClick={() => onClick('yandex')} variant='outline'>
 					<FaYandex className='mr-2 size-4' />
 					Яндекс
 				</Button>
 			</div>
-			<div className='relative mb-2 space-y-4'>
+			{/* <div className='relative mb-2 space-y-4'>
 				<div className='absolute inset-0 flex h-full items-center'>
 					<span className='w-full border-t'></span>
 				</div>
@@ -46,7 +46,7 @@ export function AuthSocial() {
 						Или
 					</span>
 				</div>
-			</div>
+			</div> */}
 		</>
 	)
 }

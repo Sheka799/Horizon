@@ -1,15 +1,16 @@
 import { forwardRef, Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
-import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha'
-import { ConfigModule, ConfigService } from '@nestjs/config'
-import { getRecaptchaConfig } from '@/config/recaptcha.config'
 import { ProviderModule } from './provider/provider.module'
 import { getProvidersConfig } from '@/config/providers.config'
 import { EmailConfirmationModule } from './email-confirmation/email-confirmation.module'
 import { UserModule } from '@/user/user.module'
 import { PasswordRecoveryModule } from './password-recovery/password-recovery.module'
 import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module'
+import { SmartCaptchaGuard } from '@/libs/common/guards/smart-captcha.guard'
+
 @Module({
 	imports: [
 		ProviderModule.registerAsync({
@@ -21,15 +22,10 @@ import { TwoFactorAuthModule } from './two-factor-auth/two-factor-auth.module'
 		PasswordRecoveryModule,
 		TwoFactorAuthModule,
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		forwardRef(() => EmailConfirmationModule),
-		GoogleRecaptchaModule.forRootAsync({
-			imports: [ConfigModule],
-			useFactory: getRecaptchaConfig,
-			inject: [ConfigService]
-		})
+		forwardRef(() => EmailConfirmationModule)
 	],
 	controllers: [AuthController],
-	providers: [AuthService],
+	providers: [AuthService, SmartCaptchaGuard],
 	exports: [AuthService]
 })
 export class AuthModule {}

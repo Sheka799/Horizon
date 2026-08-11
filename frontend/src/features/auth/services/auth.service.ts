@@ -1,12 +1,12 @@
 import { axiosClassic } from '@/shared/api'
+import { ROUTES } from '@/shared/config'
 
 import { TypeLoginSchema, TypeRegisterSchema } from '../schemes'
 import { IUser } from '../types'
-import { ROUTES } from '@/shared/config'
 
 class AuthService {
 	public async register(body: TypeRegisterSchema, recaptcha?: string) {
-		const headers = recaptcha ? { recaptcha } : undefined
+		const headers = recaptcha ? { 'smart-token': recaptcha } : undefined
 		const response = await axiosClassic.post<IUser>(
 			ROUTES.AUTH.REGISTER,
 			body,
@@ -16,10 +16,14 @@ class AuthService {
 	}
 
 	public async login(body: TypeLoginSchema, recaptcha?: string) {
-		const headers = recaptcha ? { recaptcha } : undefined
-		const response = await axiosClassic.post<IUser>(ROUTES.AUTH.LOGIN, body, {
-			headers
-		})
+		const headers = recaptcha ? { 'smart-token': recaptcha } : undefined
+		const response = await axiosClassic.post<IUser>(
+			ROUTES.AUTH.LOGIN,
+			body,
+			{
+				headers
+			}
+		)
 		return response.data
 	}
 

@@ -16,10 +16,10 @@ import { AuthService } from './auth.service'
 import { RegisterDto } from './dto/register.dto'
 import { Request, Response } from 'express'
 import { LoginDto } from './dto/login.dto'
-import { Recaptcha } from '@nestlab/google-recaptcha'
 import { AuthProviderGuard } from './guards/provider.guard'
 import { ConfigService } from '@nestjs/config'
 import { ProviderService } from './provider/provider.service'
+import { SmartCaptchaGuard } from '@/libs/common/guards/smart-captcha.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -29,14 +29,14 @@ export class AuthController {
 		private readonly providerService: ProviderService
 	) {}
 
-	@Recaptcha()
+	@UseGuards(SmartCaptchaGuard)
 	@Post('register')
 	@HttpCode(HttpStatus.OK)
 	public async register(@Body() dto: RegisterDto) {
 		return this.authService.register(dto)
 	}
 
-	@Recaptcha()
+	@UseGuards(SmartCaptchaGuard)
 	@Post('login')
 	@HttpCode(HttpStatus.OK)
 	public async login(@Req() req: Request, @Body() dto: LoginDto) {
@@ -57,7 +57,9 @@ export class AuthController {
 
 		await this.authService.extractProfileFromCode(req, provider, code)
 
-		return res.redirect(`${this.configService.getOrThrow<string>('ALLOWED_ORIGIN')}/dashboard/settings`)
+		return res.redirect(
+			`${this.configService.getOrThrow<string>('ALLOWED_ORIGIN')}/dashboard/settings`
+		)
 	}
 
 	@UseGuards(AuthProviderGuard)

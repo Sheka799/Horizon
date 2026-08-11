@@ -1,10 +1,9 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTheme } from 'next-themes'
+import { SmartCaptcha } from '@yandex/smart-captcha'
 import Link from 'next/link'
 import { useState } from 'react'
-import ReCAPTCHA from 'react-google-recaptcha'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -18,34 +17,44 @@ import {
 	FormMessage,
 	Input
 } from '@/shared/components/ui'
+import { ROUTES } from '@/shared/config'
 
 import { useLoginMutation } from '../hooks'
 import { LoginSchema, TypeLoginSchema } from '../schemes'
 
 import { AuthWrapper } from './AuthWrapper'
-import { ROUTES } from '@/shared/config'
 
 export function LoginForm() {
-	const { theme } = useTheme()
-	const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null)
+	const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+	const [captchaKey, setCaptchaKey] = useState(0)
 	const [isShowTwoFactor, setIsShowTwoFactor] = useState(false)
 
 	const form = useForm<TypeLoginSchema>({
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
 			email: '',
-			password: ''
+			password: '',
+			code: ''
 		}
 	})
 
 	const { login, IsLoadingLogin } = useLoginMutation(setIsShowTwoFactor)
 
+	const resetCaptcha = () => {
+		setCaptchaToken(null)
+		setCaptchaKey(prev => prev + 1)
+	}
+
 	const onSubmit = (values: TypeLoginSchema) => {
-		if (recaptchaValue) {
-			login({ values, recaptcha: recaptchaValue })
-		} else {
+		if (!captchaToken) {
 			toast.error('Пожалуйста, подтвердите, что вы не робот')
+			return
 		}
+
+		const tokenToSend = captchaToken
+		resetCaptcha()
+
+		login({ values, recaptcha: tokenToSend })
 	}
 
 	return (
@@ -111,7 +120,9 @@ export function LoginForm() {
 										<div className='flex items-center justify-between'>
 											<FormLabel>Пароль</FormLabel>
 											<Link
-												href={ROUTES.AUTH.RESET_PASSWORD}
+												href={
+													ROUTES.AUTH.RESET_PASSWORD
+												}
 												className='ml-auto inline-block text-sm underline'
 											>
 												Забыли пароль?
@@ -132,12 +143,15 @@ export function LoginForm() {
 					)}
 
 					<div className='flex justify-center'>
-						<ReCAPTCHA
+						<SmartCaptcha
+							key={captchaKey}
 							sitekey={
-								process.env.GOOGLE_RECAPTCHA_SITE_KEY as string
+								process.env
+									.NEXT_PUBLIC_YANDEX_SMART_CAPTCHA_CLIENT_KEY as string
 							}
-							onChange={setRecaptchaValue}
-							theme={theme === 'light' ? 'light' : 'dark'}
+							onSuccess={setCaptchaToken}
+							onTokenExpired={() => setCaptchaToken(null)}
+							language='ru'
 						/>
 					</div>
 					<Button
