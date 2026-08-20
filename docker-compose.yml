@@ -1,18 +1,15 @@
 services:
   db:
-    container_name: horizon-postgres
     image: postgres:16.5
     restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    ports:
-      - 5433:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - backend
+      - dokploy-network
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
       interval: 5s
@@ -20,30 +17,22 @@ services:
       retries: 10
 
   redis:
-    container_name: horizon-redis
     image: redis:7.2
     restart: always
-    ports:
-      - 6379:6379
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
     networks:
-      - backend
+      - dokploy-network
     healthcheck:
       test: ['CMD-SHELL', 'redis-cli -a ${REDIS_PASSWORD} ping | grep PONG']
       interval: 5s
       timeout: 5s
       retries: 10
 
-  # Собирается из ./Dockerfile — тот же образ, что уйдёт в прод.
-  # Для повседневной разработки удобнее запускать `npm run start:dev` локально
-  # (hot-reload), а этот сервис поднимать, когда нужно проверить именно
-  # собранный контейнер целиком: `docker compose up --build app`.
-  app:
-    container_name: horizon-app
+  backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     restart: always
     env_file:
@@ -53,19 +42,35 @@ services:
       - POSTGRES_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       - REDIS_HOST=redis
       - REDIS_URL=redis://default:${REDIS_PASSWORD}@redis:6379
-    ports:
-      - ${APPLICATION_PORT}:${APPLICATION_PORT}
+    expose:
+      - 3001
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     networks:
+      - dokploy-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        SERVER_URL: ${SERVER_URL}
+        NEXT_PUBLIC_YANDEX_SMART_CAPTCHA_CLIENT_KEY: ${NEXT_PUBLIC_YANDEX_SMART_CAPTCHA_CLIENT_KEY}
+    restart: always
+    expose:
+      - 3000
+    depends_on:
       - backend
+    networks:
+      - dokploy-network
 
 volumes:
   postgres_data:
   redis_data:
 
 networks:
-  backend:
+  dokploy-network:
+    external: true
