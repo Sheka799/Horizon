@@ -113,9 +113,15 @@ export class AuthService {
 
 		const profile = await providerInstance.findUserByCode(code)
 
+		if (!profile.id) {
+			throw new InternalServerErrorException(
+				`Провайдер '${profile.provider}' не вернул идентификатор пользователя.`
+			)
+		}
+
 		const account = await prisma.account.findFirst({
 			where: {
-				id: profile.id,
+				providerAccountId: profile.id,
 				provider: profile.provider
 			}
 		})
@@ -145,6 +151,7 @@ export class AuthService {
 					userId: user.id,
 					type: 'oauth',
 					provider: profile.provider,
+					providerAccountId: profile.id,
 					accessToken: profile.access_token,
 					refreshToken: profile.refresh_token,
 					expiresAt: this.calculateExpiresAt(profile.expires_at)
