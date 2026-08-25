@@ -115,6 +115,7 @@ export const TokenScalarFieldEnum = {
   token: 'token',
   type: 'type',
   expiresIn: 'expiresIn',
+  attempts: 'attempts',
   createdAt: 'createdAt'
 } as const
 

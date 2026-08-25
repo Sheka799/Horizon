@@ -60,6 +60,8 @@ model Token {
   token     String    @unique
   type      TokenType
   expiresIn DateTime  @map("expires_in")
+  
+  attempts Int @default(0)
 
   createdAt DateTime @default(now()) @map("created_at")
 

@@ -6,6 +6,11 @@ import {
 	NotFoundException
 } from '@nestjs/common'
 import { TokenType } from '@prisma/generated/prisma/enums'
+import { randomInt } from 'node:crypto'
+
+// после этого числа неверных попыток токен инвалидируется —
+// дальше подбор кода бессмысленен, нужно запросить новый
+const MAX_TWO_FACTOR_ATTEMPTS = 5
 
 @Injectable()
 export class TwoFactorAuthService {
@@ -25,17 +30,35 @@ export class TwoFactorAuthService {
 			)
 		}
 
-		if (existingToken.token !== code) {
-			throw new BadRequestException(
-				'Неверный код двухфакторной аутентификации. Пожалуйста, проверьте введенный код и попробуйте снова.'
-			)
-		}
-
 		const hasExpired = new Date(existingToken.expiresIn) < new Date()
 
 		if (hasExpired) {
 			throw new BadRequestException(
 				'Срок действия токена двухфакторной аутентификации истек. Пожалуйста, запросите новый токен.'
+			)
+		}
+
+		if (existingToken.attempts >= MAX_TWO_FACTOR_ATTEMPTS) {
+			await prisma.token.delete({
+				where: {
+					id: existingToken.id,
+					type: TokenType.TWO_FACTOR
+				}
+			})
+
+			throw new BadRequestException(
+				'Превышено количество попыток ввода кода. Пожалуйста, запросите новый код.'
+			)
+		}
+
+		if (existingToken.token !== code) {
+			await prisma.token.update({
+				where: { id: existingToken.id },
+				data: { attempts: existingToken.attempts + 1 }
+			})
+
+			throw new BadRequestException(
+				'Неверный код двухфакторной аутентификации. Пожалуйста, проверьте введенный код и попробуйте снова.'
 			)
 		}
 
@@ -63,10 +86,8 @@ export class TwoFactorAuthService {
 	}
 
 	private async generateTwoFactorToken(email: string) {
-		const token = Math.floor(
-			Math.random() * (1000000 - 100000) + 100000
-		).toString()
-		const expiresIn = new Date(new Date().getTime() + 300000) // 15 minutes
+		const token = randomInt(100000, 1000000).toString()
+		const expiresIn = new Date(new Date().getTime() + 300000) // 5 минут
 
 		const existingToken = await prisma.token.findFirst({
 			where: {
