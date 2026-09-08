@@ -1,4 +1,4 @@
-import axios, { type CreateAxiosDefaults } from 'axios'
+import axios, { type CreateAxiosDefaults, type InternalAxiosRequestConfig } from 'axios'
 import { ROUTES } from '../config'
 
 const options: CreateAxiosDefaults = {
@@ -11,6 +11,23 @@ const options: CreateAxiosDefaults = {
 
 const axiosClassic = axios.create(options)
 const axiosWithAuth = axios.create(options)
+
+function attachCsrfToken(config: InternalAxiosRequestConfig) {
+	if (typeof document === 'undefined') {
+		return config
+	}
+
+	const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/)
+
+	if (match) {
+		config.headers.set('X-CSRF-Token', decodeURIComponent(match[1]))
+	}
+
+	return config
+}
+
+axiosClassic.interceptors.request.use(attachCsrfToken)
+axiosWithAuth.interceptors.request.use(attachCsrfToken)
 
 axiosWithAuth.interceptors.response.use(
 	response => response.data,

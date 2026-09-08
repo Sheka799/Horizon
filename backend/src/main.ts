@@ -10,6 +10,9 @@ import session from 'express-session'
 import { parseBoolean } from './libs/common/utils/parse-boolean.util'
 import ms from 'ms'
 import RedisStore from 'connect-redis'
+import { randomBytes } from 'node:crypto'
+import { CSRF_COOKIE_NAME } from './libs/common/guards/csrf.constants'
+import type { NextFunction, Request, Response } from 'express'
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -25,6 +28,20 @@ async function bootstrap() {
 	)
 
 	app.use(cookieParser(config.getOrThrow<string>('COOKIE_SECRET')))
+
+	app.use((req: Request, res: Response, next: NextFunction) => {
+		if (!req.cookies?.[CSRF_COOKIE_NAME]) {
+			res.cookie(CSRF_COOKIE_NAME, randomBytes(32).toString('hex'), {
+				httpOnly: false,
+				sameSite: 'lax',
+				secure: parseBoolean(config.getOrThrow<string>('SESSION_SECURE')),
+				path: '/'
+			})
+		}
+
+		next()
+	})
+
 	app.useGlobalPipes(
 		new ValidationPipe({
 			transform: true
