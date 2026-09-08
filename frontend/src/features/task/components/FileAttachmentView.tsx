@@ -1,13 +1,7 @@
 import { type NodeViewProps, NodeViewWrapper } from '@tiptap/react'
 import { Download, File, FileText } from 'lucide-react'
 
-import { isSafeUrl } from '@/shared/utils'
-
-function formatBytes(bytes: number) {
-	if (bytes < 1024) return `${bytes} Б`
-	if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`
-	return `${(bytes / 1024 / 1024).toFixed(1)} МБ`
-}
+import { formatBytes, isSafeUrl } from '@/shared/utils'
 
 export function FileAttachmentView({ node }: NodeViewProps) {
 	const { url, name, mimetype, size } = node.attrs

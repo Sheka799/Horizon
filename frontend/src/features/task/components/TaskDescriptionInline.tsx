@@ -12,8 +12,9 @@ import { toast } from 'sonner'
 import { ITask } from '@/features/board/types'
 
 import { Button } from '@/shared/components/ui'
-import { isSafeUrl } from '@/shared/utils'
+import { formatBytes, isSafeUrl } from '@/shared/utils'
 
+import { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE_BYTES } from '../constants'
 import {
 	useDeleteAttachmentMutation,
 	useUploadAttachmentMutation
@@ -30,14 +31,6 @@ import { FileAttachment } from './FileAttachment'
 import { TaskDescriptionToolbar } from './TaskDescriptionToolbar'
 import { TaskDescriptionView } from './TaskDescriptionView'
 import { UploadingFile } from './UploadingFile'
-
-const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024
-const ALLOWED_IMAGE_TYPES = [
-	'image/png',
-	'image/jpeg',
-	'image/webp',
-	'image/gif'
-]
 
 interface TaskDescriptionInlineProps {
 	task: ITask
@@ -115,7 +108,7 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 			return
 		}
 		if (file.size > MAX_FILE_SIZE_BYTES) {
-			toast.error('Файл больше 15 МБ')
+			toast.error(`Файл больше ${formatBytes(MAX_FILE_SIZE_BYTES)}`)
 			return
 		}
 
@@ -161,7 +154,7 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 		if (!file || !editor) return
 
 		if (file.size > MAX_FILE_SIZE_BYTES) {
-			toast.error('Файл больше 15 МБ')
+			toast.error(`Файл больше ${formatBytes(MAX_FILE_SIZE_BYTES)}`)
 			return
 		}
 
