@@ -13,6 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express'
 import { Authorization } from '@/auth/decorators/auth.decorator'
 import { Authorized } from '@/auth/decorators/authorized.decorator'
 
+import { MAX_FILE_SIZE_BYTES } from './attachment.constants'
 import { TaskAttachmentService } from './task-attachment.service'
 
 @Controller('tasks/:taskId/attachments')
@@ -24,7 +25,9 @@ export class TaskAttachmentController {
 	@Authorization()
 	@HttpCode(HttpStatus.CREATED)
 	@Post()
-	@UseInterceptors(FileInterceptor('file'))
+	@UseInterceptors(
+		FileInterceptor('file', { limits: { fileSize: MAX_FILE_SIZE_BYTES } })
+	)
 	public async upload(
 		@Authorized('id') userId: string,
 		@Param('taskId') taskId: string,
