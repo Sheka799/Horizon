@@ -1,19 +1,21 @@
 import { NestFactory } from '@nestjs/core'
+import { NestExpressApplication } from '@nestjs/platform-express'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
-import * as cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import { ValidationPipe } from '@nestjs/common'
 import IORedis from 'ioredis'
-import * as session from 'express-session'
+import session from 'express-session'
 import { parseBoolean } from './libs/common/utils/parse-boolean.util'
-import * as ms from 'ms'
+import ms from 'ms'
 import RedisStore from 'connect-redis'
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule)
+	const app = await NestFactory.create<NestExpressApplication>(AppModule)
 	const config = app.get(ConfigService)
 	const redis = new IORedis(config.getOrThrow<string>('REDIS_URL'))
 
+	app.set('trust proxy', 1)
 	app.use(cookieParser(config.getOrThrow<string>('COOKIE_SECRET')))
 	app.useGlobalPipes(
 		new ValidationPipe({

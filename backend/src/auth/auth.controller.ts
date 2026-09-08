@@ -20,6 +20,7 @@ import { AuthProviderGuard } from './guards/provider.guard'
 import { ConfigService } from '@nestjs/config'
 import { ProviderService } from './provider/provider.service'
 import { SmartCaptchaGuard } from '@/libs/common/guards/smart-captcha.guard'
+import { Throttle } from '@nestjs/throttler'
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +30,7 @@ export class AuthController {
 		private readonly providerService: ProviderService
 	) {}
 
+	@Throttle({ default: { limit: 5, ttl: 60000 } })
 	@UseGuards(SmartCaptchaGuard)
 	@Post('register')
 	@HttpCode(HttpStatus.OK)
@@ -36,6 +38,7 @@ export class AuthController {
 		return this.authService.register(dto)
 	}
 
+	@Throttle({ default: { limit: 5, ttl: 60000 } })
 	@UseGuards(SmartCaptchaGuard)
 	@Post('login')
 	@HttpCode(HttpStatus.OK)
