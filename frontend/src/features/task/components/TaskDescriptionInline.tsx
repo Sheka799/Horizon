@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { ITask } from '@/features/board/types'
 
 import { Button } from '@/shared/components/ui'
+import { isSafeUrl } from '@/shared/utils'
 
 import {
 	useDeleteAttachmentMutation,
@@ -136,6 +137,13 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 			return
 		}
 
+		if (!isSafeUrl(attachment.url)) {
+			removeUploadingNode(editor, uploadId)
+			deleteAttachment(attachment.id)
+			toast.error('Сервер вернул небезопасную ссылку на файл')
+			return
+		}
+
 		uploadedDuringSessionRef.current.add(attachment.id)
 
 		// Заменяем placeholder на реальную image-ноду
@@ -170,6 +178,13 @@ export function TaskDescriptionInline({ task }: TaskDescriptionInlineProps) {
 
 		if (!attachment) {
 			removeUploadingNode(editor, uploadId)
+			return
+		}
+
+		if (!isSafeUrl(attachment.url)) {
+			removeUploadingNode(editor, uploadId)
+			deleteAttachment(attachment.id)
+			toast.error('Сервер вернул небезопасную ссылку на файл')
 			return
 		}
 

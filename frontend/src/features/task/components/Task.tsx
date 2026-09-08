@@ -65,7 +65,7 @@ export function Task({ task, overlay, onTaskClick }: TaskCardProps) {
 				)}
 				<TaskMenu id={task.id} onDialogOpenChange={setHasOpenDialog} />
 			</div>
-			<p className='text-sm font-medium'>{task.name}</p>
+			<p className='text-sm font-medium wrap-break-word'>{task.name}</p>
 			<div className='mt-2 text-xs'>
 				<DueDateDisplay task={task} />
 			</div>
