@@ -4,6 +4,7 @@ import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
 import cookieParser from 'cookie-parser'
 import { ValidationPipe } from '@nestjs/common'
+import helmet from 'helmet'
 import IORedis from 'ioredis'
 import session from 'express-session'
 import { parseBoolean } from './libs/common/utils/parse-boolean.util'
@@ -16,6 +17,13 @@ async function bootstrap() {
 	const redis = new IORedis(config.getOrThrow<string>('REDIS_URL'))
 
 	app.set('trust proxy', 1)
+
+	app.use(
+		helmet({
+			crossOriginResourcePolicy: { policy: 'cross-origin' }
+		})
+	)
+
 	app.use(cookieParser(config.getOrThrow<string>('COOKIE_SECRET')))
 	app.useGlobalPipes(
 		new ValidationPipe({
