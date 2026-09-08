@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	ConflictException,
 	Injectable,
 	InternalServerErrorException,
@@ -12,6 +13,7 @@ import { User } from '@prisma/generated/prisma/client'
 import { Request, Response } from 'express'
 import { LoginDto } from './dto/login.dto'
 import { verify } from 'argon2'
+import { randomBytes } from 'node:crypto'
 import { ConfigService } from '@nestjs/config'
 import { prisma } from '@/libs/prisma'
 import { ProviderService } from './provider/provider.service'
@@ -100,11 +102,45 @@ export class AuthService {
 		return this.saveSession(req, user)
 	}
 
+	public async createOAuthState(req: Request): Promise<string> {
+		const state = randomBytes(32).toString('hex')
+		req.session.oauthState = state
+
+		return new Promise((resolve, reject) => {
+			req.session.save(err => {
+				if (err) {
+					return reject(
+						new InternalServerErrorException(
+							'Не удалось сохранить состояние OAuth-авторизации.'
+						)
+					)
+				}
+
+				resolve(state)
+			})
+		})
+	}
+
+	private validateOAuthState(req: Request, state?: string) {
+		const expectedState = req.session.oauthState
+
+		delete req.session.oauthState
+
+		if (!expectedState || !state || expectedState !== state) {
+			throw new BadRequestException(
+				'Некорректный или истёкший OAuth state. Пожалуйста, попробуйте авторизоваться заново.'
+			)
+		}
+	}
+
 	public async extractProfileFromCode(
 		req: Request,
 		provider: string,
-		code: string
+		code: string,
+		state: string
 	) {
+		this.validateOAuthState(req, state)
+
 		const providerInstance = this.providerService.findByService(provider)
 
 		if (!providerInstance) {

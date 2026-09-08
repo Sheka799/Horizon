@@ -5,6 +5,7 @@ import {
 	Get,
 	HttpCode,
 	HttpStatus,
+	NotFoundException,
 	Param,
 	Post,
 	Query,
@@ -52,13 +53,14 @@ export class AuthController {
 		@Req() req: Request,
 		@Res({ passthrough: true }) res: Response,
 		@Query('code') code: string,
+		@Query('state') state: string,
 		@Param('provider') provider: string
 	) {
 		if (!code) {
 			throw new BadRequestException('Не был предоставлен код авторизации')
 		}
 
-		await this.authService.extractProfileFromCode(req, provider, code)
+		await this.authService.extractProfileFromCode(req, provider, code, state)
 
 		return res.redirect(
 			`${this.configService.getOrThrow<string>('ALLOWED_ORIGIN')}/dashboard/settings`
@@ -67,11 +69,17 @@ export class AuthController {
 
 	@UseGuards(AuthProviderGuard)
 	@Get('/oauth/connect/:provider')
-	public connect(@Param('provider') provider: string) {
+	public async connect(@Req() req: Request, @Param('provider') provider: string) {
 		const providerInstance = this.providerService.findByService(provider)
 
+		if (!providerInstance) {
+			throw new NotFoundException(`Провайдер '${provider}' не найден.`)
+		}
+
+		const state = await this.authService.createOAuthState(req)
+
 		return {
-			url: providerInstance?.getAuthUrl()
+			url: providerInstance.getAuthUrl(state)
 		}
 	}
 

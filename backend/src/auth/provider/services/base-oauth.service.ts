@@ -19,14 +19,15 @@ export class BaseOAuthService {
 		}
 	}
 
-	public getAuthUrl() {
+	public getAuthUrl(state: string) {
 		const query = new URLSearchParams({
 			response_type: 'code',
 			client_id: this.options.client_id,
 			redirect_uri: this.getRedirectUrl(),
 			scope: (this.options.scopes ?? []).join(' '),
 			access_type: 'offline',
-			prompt: 'select_account'
+			prompt: 'select_account',
+			state
 		})
 
 		return `${this.options.authorize_url}?${query}`
