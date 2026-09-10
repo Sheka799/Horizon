@@ -33,6 +33,10 @@ export default tseslint.config(
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { ignoreRestSiblings: true },
+      ],
       'no-console': 1,
       'prettier/prettier': 0,
     },

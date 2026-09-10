@@ -19,6 +19,7 @@ import { prisma } from '@/libs/prisma'
 import { ProviderService } from './provider/provider.service'
 import { EmailConfirmationService } from './email-confirmation/email-confirmation.service'
 import { TwoFactorAuthService } from './two-factor-auth/two-factor-auth.service'
+import { sanitizeUser } from '../user/utils/sanitize-user.util'
 @Injectable()
 export class AuthService {
 	public constructor(
@@ -230,7 +231,7 @@ export class AuthService {
 					)
 				}
 
-				resolve({ user })
+				resolve({ user: sanitizeUser(user) })
 			})
 		})
 	}

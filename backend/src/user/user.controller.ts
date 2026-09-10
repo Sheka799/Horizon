@@ -12,6 +12,7 @@ import { Authorized } from '@/auth/decorators/authorized.decorator'
 import { Authorization } from '@/auth/decorators/auth.decorator'
 import { UserRole } from '@prisma/generated/prisma/enums'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { sanitizeUser } from './utils/sanitize-user.util'
 
 @Controller('users')
 export class UserController {
@@ -21,14 +22,14 @@ export class UserController {
 	@HttpCode(HttpStatus.OK)
 	@Get('profile')
 	public async findProfile(@Authorized('id') userId: string) {
-		return this.userService.findById(userId)
+		return sanitizeUser(await this.userService.findById(userId))
 	}
 
 	@Authorization(UserRole.ADMIN)
 	@HttpCode(HttpStatus.OK)
 	@Get('by-id/:id')
 	public async findById(@Param('id') id: string) {
-		return this.userService.findById(id)
+		return sanitizeUser(await this.userService.findById(id))
 	}
 
 	@Authorization()

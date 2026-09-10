@@ -13,8 +13,6 @@ export interface IAccount {
 	id: string
 	type: string
 	provider: string
-	refreshToken: string
-	accessToken: string
 	expiresAt: number
 	createdAt: string
 	updatedAt: string
@@ -24,7 +22,6 @@ export interface IAccount {
 export interface IUser {
 	id: string
 	email: string
-	password: string
 	displayName: string
 	picture: string
 	role: EUserRole
