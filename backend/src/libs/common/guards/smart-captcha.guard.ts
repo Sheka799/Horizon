@@ -7,8 +7,6 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { Request } from 'express'
 
-import { isDev } from '@/libs/common/utils/is-dev.util'
-
 interface SmartCaptchaResponse {
 	status: 'ok' | 'failed'
 	message?: string
@@ -20,10 +18,6 @@ export class SmartCaptchaGuard implements CanActivate {
 	public constructor(private readonly configService: ConfigService) {}
 
 	public async canActivate(context: ExecutionContext): Promise<boolean> {
-		// if (isDev(this.configService)) {
-		// 	return true
-		// }
-
 		const request = context.switchToHttp().getRequest<Request>()
 		const token = request.headers['smart-token'] as string | undefined
 
