@@ -2,7 +2,8 @@ export const ALLOWED_IMAGE_MIME_TYPES = [
 	'image/png',
 	'image/jpeg',
 	'image/webp',
-	'image/gif'
+	'image/gif',
+	'image/avif'
 ] as const
 
 export const ALLOWED_DOCUMENT_MIME_TYPES = [
