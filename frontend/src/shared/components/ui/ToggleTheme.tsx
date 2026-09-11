@@ -3,6 +3,8 @@
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
+import { cn } from '@/shared/utils'
+
 import { Button } from './Button'
 import {
 	DropdownMenu,
@@ -11,12 +13,16 @@ import {
 	DropdownMenuTrigger
 } from './DropdownMenu'
 
-export function ToggleTheme() {
+interface ToggleThemeProps {
+	className?: string
+}
+
+export function ToggleTheme({ className }: ToggleThemeProps = {}) {
 	const { setTheme } = useTheme()
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild className='absolute top-5 left-5'>
+			<DropdownMenuTrigger asChild className={cn(className)}>
 				<Button variant='outline' size='icon'>
 					<Sun className='h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90' />
 					<Moon className='absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0' />

@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+	metadataBase: new URL('https://horizon.web-evgeny.ru'),
 	title: {
 		absolute: 'Авторизация',
 		template: '%s | Horizon'
