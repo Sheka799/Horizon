@@ -41,4 +41,10 @@ export default tseslint.config(
       'prettier/prettier': 0,
     },
   },
+  {
+    files: ['**/*.spec.ts', 'test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-argument': 'off',
+    },
+  },
 );
