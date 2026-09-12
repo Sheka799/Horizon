@@ -35,6 +35,7 @@ async function bootstrap() {
 				httpOnly: false,
 				sameSite: 'lax',
 				secure: parseBoolean(config.getOrThrow<string>('SESSION_SECURE')),
+				domain: config.getOrThrow<string>('SESSION_DOMAIN'),
 				path: '/'
 			})
 		}
