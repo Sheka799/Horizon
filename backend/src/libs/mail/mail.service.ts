@@ -73,7 +73,7 @@ export class MailService {
     }>;
   }) {
     const mailOptions = {
-      from: `"Horizon" <${this.configService.getOrThrow<string>('MAIL_LOGIN')}>`,
+      from: `"Horizon" <${this.configService.getOrThrow<string>('MAIL_FROM')}>`,
       ...options,
     };
 
