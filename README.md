@@ -21,7 +21,7 @@
 
 ## Технологии
 
-**Backend** — NestJS 11, Prisma 7 + PostgreSQL, Redis (сессии), сессионная авторизация (не JWT), Argon2, AWS S3 SDK, Nodemailer + React Email
+**Backend** — NestJS 11, Prisma 7 + PostgreSQL, Redis (сессии), сессионная авторизация (не JWT), Argon2, AWS S3 SDK, Resend + React Email
 
 **Frontend** — Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, TanStack Query, @dnd-kit, Tiptap, react-hook-form + Zod
 
