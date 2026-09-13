@@ -1,5 +1,6 @@
 export const ROUTES = {
 	HOME: '/',
+	PRIVACY_POLICY: '/privacy-policy',
 
 	AUTH: {
 		LOGIN: '/auth/login',
@@ -8,7 +9,7 @@ export const ROUTES = {
 		RESET_PASSWORD: '/auth/reset-password',
 		NEW_VERIFICATION: '/auth/new-verification',
 		LOGOUT: '/auth/logout',
-		PASSWORD_RECOVERY: '/auth/password-recovery',
+		PASSWORD_RECOVERY: '/auth/password-recovery'
 	},
 
 	DASHBOARD: {

@@ -1,5 +1,3 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
 import {
 	Archive,
 	Calendar1,
@@ -8,6 +6,8 @@ import {
 	ShieldCheck,
 	Text
 } from 'lucide-react'
+import type { Metadata } from 'next'
+import Link from 'next/link'
 
 import {
 	Card,
@@ -117,7 +117,9 @@ export default function Home() {
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
 			/>
 			<header className='flex items-center justify-between px-6 py-5 sm:px-10'>
-				<span className='text-lg font-bold tracking-tight'>Horizon</span>
+				<span className='text-lg font-bold tracking-tight'>
+					Horizon
+				</span>
 				<div className='flex items-center gap-2'>
 					<ToggleTheme />
 					<Link
@@ -145,8 +147,8 @@ export default function Home() {
 					</h1>
 					<p className='text-muted-foreground max-w-xl text-lg text-balance'>
 						Доски, дедлайны, вложения и архив в одном месте —
-						Horizon помогает не терять контекст ни по личным
-						делам, ни по командным проектам.
+						Horizon помогает не терять контекст ни по личным делам,
+						ни по командным проектам.
 					</p>
 					<div className='flex flex-wrap items-center justify-center gap-3'>
 						<Link
@@ -157,7 +159,10 @@ export default function Home() {
 						</Link>
 						<Link
 							href={ROUTES.AUTH.LOGIN}
-							className={buttonVariants({ variant: 'outline', size: 'lg' })}
+							className={buttonVariants({
+								variant: 'outline',
+								size: 'lg'
+							})}
 						>
 							Войти в аккаунт
 						</Link>
@@ -201,7 +206,13 @@ export default function Home() {
 			</main>
 
 			<footer className='text-muted-foreground border-t px-6 py-6 text-center text-sm'>
-				© {new Date().getFullYear()} Horizon
+				<p>© {new Date().getFullYear()} Horizon</p>
+				<Link
+					href={ROUTES.PRIVACY_POLICY}
+					className='hover:text-foreground mt-1 inline-block underline underline-offset-2'
+				>
+					Политика обработки персональных данных
+				</Link>
 			</footer>
 		</div>
 	)
