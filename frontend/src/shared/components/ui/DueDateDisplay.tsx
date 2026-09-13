@@ -4,7 +4,9 @@ import { ETaskStatus, ITask } from '@/features/board/types'
 
 import { isOverdueOrToday } from '@/shared/utils'
 
-export function DueDateDisplay({ task }: { task: ITask }) {
+type DueDateTask = Pick<ITask, 'dueDate' | 'status'>
+
+export function DueDateDisplay({ task }: { task: DueDateTask }) {
 	if (!task.dueDate) {
 		return <span className='text-muted-foreground'>—</span>
 	}

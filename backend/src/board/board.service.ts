@@ -1,8 +1,19 @@
 import { prisma } from '@/libs/prisma'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { generateKeyBetween } from 'fractional-indexing'
+import { TaskStatus } from '@prisma/generated/prisma/enums'
 import { UpdateBoardDto } from './dto/update-board.dto'
 import { CreateBoardDto } from './dto/create-board.dto'
+
+function startOfUtcDay(date: Date) {
+	const result = new Date(date)
+	result.setUTCHours(0, 0, 0, 0)
+	return result
+}
+
+function dateKey(date: Date) {
+	return date.toISOString().slice(0, 10)
+}
 
 @Injectable()
 export class BoardService {
@@ -15,6 +26,156 @@ export class BoardService {
 		})
 
 		return boards
+	}
+
+	public async stats(userId: string) {
+		const [
+			boardsCount,
+			activeTasksCount,
+			overdueTasksCount,
+			doneLastWeekCount,
+			activity,
+			upcomingDeadlines
+		] = await Promise.all([
+			prisma.board.count({
+				where: {
+					userId
+				}
+			}),
+			prisma.task.count({
+				where: {
+					column: {
+						board: {
+							userId
+						}
+					},
+					isArchived: false,
+					status: TaskStatus.ACTIVE
+				}
+			}),
+			prisma.task.count({
+				where: {
+					column: {
+						board: {
+							userId
+						}
+					},
+					isArchived: false,
+					status: TaskStatus.ACTIVE,
+					dueDate: {
+						lte: new Date()
+					}
+				}
+			}),
+			prisma.task.count({
+				where: {
+					column: {
+						board: {
+							userId
+						}
+					},
+					isArchived: false,
+					completedAt: {
+						gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+					}
+				}
+			}),
+			this.getActivity(userId),
+			this.getUpcomingDeadlines(userId)
+		])
+
+		return {
+			boardsCount,
+			activeTasksCount,
+			overdueTasksCount,
+			doneLastWeekCount,
+			activity,
+			upcomingDeadlines
+		}
+	}
+
+	// Кол-во выполненных задач по дням за последние 14 дней
+	private async getActivity(userId: string) {
+		const days = 14
+		const from = startOfUtcDay(
+			new Date(Date.now() - (days - 1) * 24 * 60 * 60 * 1000)
+		)
+
+		const completedTasks = await prisma.task.findMany({
+			where: {
+				column: {
+					board: {
+						userId
+					}
+				},
+				completedAt: {
+					gte: from
+				}
+			},
+			select: {
+				completedAt: true
+			}
+		})
+
+		const buckets = new Map<string, number>()
+		for (let i = 0; i < days; i++) {
+			const date = new Date(from)
+			date.setUTCDate(date.getUTCDate() + i)
+			buckets.set(dateKey(date), 0)
+		}
+
+		for (const task of completedTasks) {
+			if (!task.completedAt) continue
+
+			const key = dateKey(task.completedAt)
+			if (buckets.has(key)) {
+				buckets.set(key, (buckets.get(key) ?? 0) + 1)
+			}
+		}
+
+		return Array.from(buckets.entries()).map(([date, count]) => ({
+			date,
+			count
+		}))
+	}
+
+	// Ближайшие 5 задач с дедлайном
+	private async getUpcomingDeadlines(userId: string) {
+		const tasks = await prisma.task.findMany({
+			where: {
+				column: {
+					board: {
+						userId
+					}
+				},
+				isArchived: false,
+				status: TaskStatus.ACTIVE,
+				dueDate: {
+					not: null
+				}
+			},
+			orderBy: { dueDate: 'asc' },
+			take: 5,
+			include: {
+				column: {
+					include: {
+						board: {
+							select: { id: true, title: true }
+						}
+					}
+				}
+			}
+		})
+
+		return tasks.map(task => ({
+			id: task.id,
+			name: task.name,
+			priority: task.priority,
+			dueDate: task.dueDate,
+			status: task.status,
+			boardId: task.column.board.id,
+			boardTitle: task.column.board.title
+		}))
 	}
 
 	public async findById(userId: string, id: string) {

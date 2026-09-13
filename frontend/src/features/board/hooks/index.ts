@@ -1,5 +1,6 @@
 export * from './useBoardsQuery'
 export * from './useBoardQuery'
+export * from './useBoardStatsQuery'
 export * from './useCreateBoardMutation'
 export * from './useBoardDnd'
 export * from './useDeleteBoardMutation'

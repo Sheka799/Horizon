@@ -53,3 +53,27 @@ export interface Board {
 	updatedAt: string
 	userId: string
 }
+
+export interface IActivityPoint {
+	date: string
+	count: number
+}
+
+export interface IUpcomingDeadline {
+	id: string
+	name: string
+	priority: EPriority | null
+	dueDate: string
+	status: ETaskStatus
+	boardId: string
+	boardTitle: string
+}
+
+export interface IBoardStats {
+	boardsCount: number
+	activeTasksCount: number
+	overdueTasksCount: number
+	doneLastWeekCount: number
+	activity: IActivityPoint[]
+	upcomingDeadlines: IUpcomingDeadline[]
+}

@@ -29,6 +29,13 @@ export class BoardController {
 
 	@Authorization()
 	@HttpCode(HttpStatus.OK)
+	@Get('stats')
+	async stats(@Authorized('id') userId: string) {
+		return this.boardService.stats(userId)
+	}
+
+	@Authorization()
+	@HttpCode(HttpStatus.OK)
 	@Get(':id')
 	async findById(@Authorized('id') userId: string, @Param('id') id: string) {
 		return this.boardService.findById(userId, id)

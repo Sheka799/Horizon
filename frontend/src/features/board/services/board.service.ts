@@ -1,7 +1,7 @@
 import { axiosWithAuth } from '@/shared/api'
 
 import { TypeBoardSchema } from '../schemes'
-import { Board, ITask } from '../types'
+import { Board, IBoardStats, ITask } from '../types'
 
 export interface ArchivedTasksResponse {
 	tasks: ITask[]
@@ -23,6 +23,13 @@ class BoardService {
 		const response = (await axiosWithAuth.get(
 			`boards/${id}`
 		)) as unknown as Board
+		return response
+	}
+
+	public async stats() {
+		const response = (await axiosWithAuth.get(
+			'boards/stats'
+		)) as unknown as IBoardStats
 		return response
 	}
 
