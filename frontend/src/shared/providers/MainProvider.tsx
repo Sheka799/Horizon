@@ -2,6 +2,8 @@
 
 import { type PropsWithChildren } from 'react'
 
+import { CookieConsent, YandexMetrika } from '@/shared/components'
+
 import { TanstackQueryProvider } from './TanstackQueryProvider'
 import { ThemeProvider } from './ThemeProvider'
 import { ToastProvider } from './ToastProvider'
@@ -18,6 +20,8 @@ export function MainProvider({ children }: PropsWithChildren<unknown>) {
 				<TooltipProvider>
 					<ToastProvider />
 					{children}
+					<YandexMetrika />
+					<CookieConsent />
 				</TooltipProvider>
 			</ThemeProvider>
 		</TanstackQueryProvider>
